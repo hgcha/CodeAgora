@@ -26,7 +26,7 @@ public class Post {
     private String title;
     private String content;
 
-    @OneToMany
+    @OneToMany(mappedBy = "post")
     private List<Comment> comments;
 
     @CreationTimestamp

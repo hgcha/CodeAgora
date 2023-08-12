@@ -2,6 +2,7 @@ package hgcha.CodeAgora.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
+@Getter
 @Table(name = "member")
 @NoArgsConstructor
 public class User {

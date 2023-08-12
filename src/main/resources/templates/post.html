@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8"/>
+        <link rel="stylesheet" href="../static/css/bootstrap.min.css"/>
+        <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+        <title>CodeAgora</title>
+    </head>
+    <body>
+        <nav th:replace="~{navbar :: nav}"></nav>
+
+        <!--제목-->
+        <div class="card m-5">
+            <div class="card-body">
+                <h4 class="card-title mb-3" th:text="${post.title}">
+                    게시글 제목
+                </h4>
+                <p>
+                    <span th:text="${post.author.username}">작성자 ID</span>
+                    <span style="float: right;" th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm:ss')}">작성 시간</span>
+                </p>
+                <hr/>
+                <p class="card-text mt-4" th:text="${post.content}">
+                    게시글 내용
+                </p>
+            </div>
+        </div>
+
+        <!--댓글-->
+        <div class="card mx-5 mb-2" th:each="comment : ${post.comments}">
+            <div class="card-body">
+                <p>
+                    <span class="card-text" th:text="${comment.author.username}">댓글 작성자 이름</span>
+                    <span class="card-text" style="float: right;" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm:ss')}">댓글 작성 시간</span>
+                </p>
+                <hr/>
+                <p class="card-text mt-4" th:text="${comment.content}">댓글 내용</p>
+            </div>
+        </div>
+
+    </body>
+</html>
