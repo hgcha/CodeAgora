@@ -77,4 +77,6 @@ class PostRepositoryTest {
         //then
         assertThat(postRepository.findById(savedPost.getId())).isEmpty();
     }
+
+
 }
