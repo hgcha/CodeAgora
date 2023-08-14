@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <meta charset="UTF-8">
+    <title>CodeAgora</title>
+</head>
+<body>
+    <nav th:replace="~{navbar :: navbar}"></nav>
+    <form class="w-50 h-75 mt-5" style="margin: auto;" th:action="@{/infoBoard/write}" method="post">
+        <label th:for="title" class="form-label">제목</label>
+        <input class="form-control" type="text" name="title"/>
+        <label th:for="content" class="form-label mt-5">내용</label>
+        <textarea style="resize: none;" class="form-control" name="content" rows="10"></textarea>
+        <button type="submit" class="btn btn-primary float-end mt-2">작성 완료</button>
+    </form>
+</body>
+</html>

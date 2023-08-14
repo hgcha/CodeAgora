@@ -60,4 +60,12 @@ public class Comment {
     public int hashCode() {
         return Objects.hash(author, post, content, createdAt, modifiedAt);
     }
+
+    public void setPost(Post post) {
+        this.post = post;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 }

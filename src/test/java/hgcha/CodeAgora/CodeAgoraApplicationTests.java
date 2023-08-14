@@ -7,11 +7,6 @@ import hgcha.CodeAgora.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-
-import java.util.Optional;
 
 @SpringBootTest
 class CodeAgoraApplicationTests {
@@ -21,9 +16,6 @@ class CodeAgoraApplicationTests {
 
 	@Autowired
 	UserRepository userRepository;
-
-	@Autowired
-	ApplicationContext applicationContext;
 
 	@Test
 	void contextLoads() {
@@ -42,9 +34,4 @@ class CodeAgoraApplicationTests {
 		}
 	}
 
-	@Test
-	void checkBean() {
-		PageableHandlerMethodArgumentResolver bean = applicationContext.getBean(PageableHandlerMethodArgumentResolver.class);
-		bean.
-	}
 }
