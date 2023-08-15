@@ -20,6 +20,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Optional;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/infoBoard")
@@ -98,5 +100,11 @@ public class InfoBoardController {
         post.setContent(postUpdateDto.getContent());
         postRepository.save(post);
         return "redirect:/infoBoard/{postId}";
+    }
+
+    @PostMapping("/{postId}/delete")
+    public String delete(@PathVariable Long postId) {
+        postService.delete(postId);
+        return "redirect:/infoBoard";
     }
 }

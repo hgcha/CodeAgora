@@ -27,10 +27,16 @@
             </div>
 
             <!--글 수정 버튼-->
-            <div class="mt-3 mb-5" style="display: flex; flex-direction: row-reverse;">
+            <div class="mt-3 mb-5 d-flex float-end" style="gap: 10px;">
                 <button class="btn btn-primary" type="button" th:onclick="|location.href='/infoBoard/${post.id}/update'|">
                     수정
                 </button>
+
+                <form th:action="@{|/infoBoard/${post.id}/delete|}" method="post">
+                    <button class="btn btn-primary" type="submit">
+                        삭제
+                    </button>
+                </form>
             </div>
 
             <!--댓글-->
