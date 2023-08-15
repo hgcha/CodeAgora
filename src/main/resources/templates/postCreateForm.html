@@ -1,18 +1,30 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"/>
     <title>CodeAgora</title>
 </head>
 <body>
     <nav th:replace="~{navbar :: navbar}"></nav>
-    <form class="w-50 h-75 mt-5" style="margin: auto;" th:action="@{/infoBoard/write}" method="post">
+    <form class="w-50 h-75 mt-5 mx-auto" th:object="${post}" th:action="@{/infoBoard/create}" method="post">
+
         <label th:for="title" class="form-label">제목</label>
-        <input class="form-control" type="text" name="title"/>
+        <input type="text" class="form-control" th:errorclass="is-invalid" th:field="*{title}"/>
+        <p class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
+            빈 제목을 작성할 수 없습니다.
+        </p>
+
         <label th:for="content" class="form-label mt-5">내용</label>
-        <textarea style="resize: none;" class="form-control" name="content" rows="10"></textarea>
-        <button type="submit" class="btn btn-primary float-end mt-2">작성 완료</button>
+        <textarea class="form-control" style="resize: none;" th:errorclass="is-invalid" th:field="*{content}" rows="10"></textarea>
+        <p class="invalid-feedback" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">
+            빈 내용을 작성할 수 없습니다.
+        </p>
+
+        <button type="submit" class="btn btn-primary float-end mt-2">
+            작성 완료
+        </button>
+
     </form>
 </body>
 </html>

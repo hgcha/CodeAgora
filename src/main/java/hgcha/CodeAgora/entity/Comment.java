@@ -1,6 +1,7 @@
 package hgcha.CodeAgora.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,7 @@ public class Comment {
     @ManyToOne
     private Post post;
 
+    @NotBlank(message = "댓글 내용을 입력해주세요.")
     private String content;
 
     @CreationTimestamp

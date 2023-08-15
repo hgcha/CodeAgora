@@ -24,6 +24,7 @@ public class Post {
     private User author;
 
     private String title;
+
     private String content;
 
     @OneToMany(mappedBy = "post")
