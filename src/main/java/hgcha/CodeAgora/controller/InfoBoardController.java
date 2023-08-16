@@ -1,11 +1,14 @@
 package hgcha.CodeAgora.controller;
 
+import hgcha.CodeAgora.dto.CommentCreateDto;
+import hgcha.CodeAgora.dto.CommentUpdateDto;
 import hgcha.CodeAgora.dto.PostCreateDto;
 import hgcha.CodeAgora.dto.PostUpdateDto;
 import hgcha.CodeAgora.entity.Comment;
 import hgcha.CodeAgora.entity.Post;
 import hgcha.CodeAgora.repository.CommentRepository;
 import hgcha.CodeAgora.repository.PostRepository;
+import hgcha.CodeAgora.service.CommentService;
 import hgcha.CodeAgora.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +21,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -30,6 +30,7 @@ public class InfoBoardController {
 
     private final PostService postService;
     private final PostRepository postRepository;
+    private final CommentService commentService;
     private final CommentRepository commentRepository;
 
     @GetMapping
@@ -71,16 +72,16 @@ public class InfoBoardController {
     }
 
     @PostMapping("/{postId}/comments")
-    public String createComment(@PathVariable Long postId, @Valid Comment comment, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
-        Post post = postService.findById(postId);
-
+    public String createComment(@PathVariable Long postId,
+                                @Valid @ModelAttribute("comment") CommentCreateDto commentCreateDto,
+                                BindingResult bindingResult,
+                                Model model) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("post", post);
+            model.addAttribute("post", postService.findById(postId));
             return "post";
         }
 
-        comment.setPost(post);
-        commentRepository.save(comment);
+        commentService.create(commentCreateDto);
         return "redirect:/infoBoard/{postId}";
     }
 
@@ -107,4 +108,27 @@ public class InfoBoardController {
         postService.delete(postId);
         return "redirect:/infoBoard";
     }
+
+    @PostMapping("/{postId}/comments/{commentId}/delete")
+    public String deleteComment(@PathVariable Long commentId) {
+        commentService.delete(commentId);
+        return "redirect:/infoBoard/{postId}";
+    }
+
+    @PostMapping("/{postId}/comments/{commentId}/update")
+    public String updateComment(@PathVariable Long postId,
+                                @Valid @ModelAttribute("commentUpdateDto") CommentUpdateDto commentUpdateDto,
+                                BindingResult bindingResult,
+                                Model model) {
+        if (bindingResult.hasErrors()) {
+            log.info("bindingResult = {}", bindingResult);
+            model.addAttribute("post", postService.findById(postId));
+            model.addAttribute("comment", new Comment());
+            return "post";
+        }
+
+        commentService.update(commentUpdateDto);
+        return "redirect:/infoBoard/{postId}";
+    }
+
 }
