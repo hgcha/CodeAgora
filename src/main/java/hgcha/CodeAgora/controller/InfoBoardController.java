@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/infoBoard")
+@RequestMapping({"/infoBoard", "/"})
 @Slf4j
 public class InfoBoardController {
 
