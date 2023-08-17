@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -23,15 +24,19 @@ public class User {
     private String password;
     private String email;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @CreationTimestamp
     @Column(name = "joined_at")
     private LocalDateTime joinedAt;
 
     @Builder
-    public User(String username, String password, String email) {
+    public User(String username, String password, String email, Role role) {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.role = role;
     }
 
     @Override

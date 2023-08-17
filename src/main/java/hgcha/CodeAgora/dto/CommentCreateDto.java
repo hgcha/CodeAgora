@@ -12,6 +12,9 @@ public class CommentCreateDto {
     @NotNull
     private Long postId;
 
+    @NotNull
+    private String username;
+
     @NotBlank(message = "댓글 내용을 입력해주세요.")
     private String content;
 

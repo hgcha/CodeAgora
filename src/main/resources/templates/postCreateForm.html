@@ -9,6 +9,8 @@
     <nav th:replace="~{navbar :: navbar}"></nav>
     <form class="w-50 h-75 mt-5 mx-auto" th:object="${post}" th:action="@{/infoBoard/create}" method="post">
 
+        <input type="hidden" name="username" th:value="${#authentication.principal.username}"/>
+
         <label th:for="title" class="form-label">제목</label>
         <input type="text" class="form-control" th:errorclass="is-invalid" th:field="*{title}"/>
         <p class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">

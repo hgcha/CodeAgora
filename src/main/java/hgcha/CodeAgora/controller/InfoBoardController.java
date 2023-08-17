@@ -10,6 +10,7 @@ import hgcha.CodeAgora.repository.CommentRepository;
 import hgcha.CodeAgora.repository.PostRepository;
 import hgcha.CodeAgora.service.CommentService;
 import hgcha.CodeAgora.service.PostService;
+import hgcha.CodeAgora.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,9 +30,9 @@ import org.springframework.web.bind.annotation.*;
 public class InfoBoardController {
 
     private final PostService postService;
+    private final UserService userService;
     private final PostRepository postRepository;
     private final CommentService commentService;
-    private final CommentRepository commentRepository;
 
     @GetMapping
     public String list(
@@ -47,6 +48,8 @@ public class InfoBoardController {
 
     @GetMapping("/{postId}")
     public String post(@PathVariable Long postId, Model model) {
+        Post post = postService.findById(postId);
+        log.info("post={}", post.getAuthor());
         model.addAttribute("post", postService.findById(postId));
         model.addAttribute("comment", new Comment());
         return "post";
@@ -54,19 +57,23 @@ public class InfoBoardController {
 
     @GetMapping("/create")
     public String createForm(Model model) {
-        model.addAttribute("post", new PostCreateDto(null, null));
+        model.addAttribute("post", new PostCreateDto(null, null, null));
         return "postCreateForm";
     }
 
     @PostMapping("/create")
     public String create(@Valid @ModelAttribute(name = "post") PostCreateDto postCreateDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
+            log.info("bindingResult = {}", bindingResult);
             return "postCreateForm";
         }
 
-        Post post = new Post();
-        post.setTitle(postCreateDto.getTitle());
-        post.setContent(postCreateDto.getContent());
+        Post post = Post.builder()
+                        .author(userService.findByUsername(postCreateDto.getUsername()))
+                        .title(postCreateDto.getTitle())
+                        .content(postCreateDto.getContent())
+                        .build();
+
         Post savedPost = postRepository.save(post);
         return "redirect:/infoBoard/" + savedPost.getId();
     }
