@@ -36,7 +36,7 @@
             </li>
         </ul>
 
-        <a class="btn btn-primary" style="float: right;" th:href="@{/infoBoard/create}">새 글 작성</a>
+        <a class="btn btn-primary" style="float: right;" sec:authorize="isAuthenticated()" th:href="@{/infoBoard/create}">새 글 작성</a>
     </div>
 </body>
 </html>

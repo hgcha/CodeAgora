@@ -1,6 +1,7 @@
 package hgcha.CodeAgora.service;
 
 import hgcha.CodeAgora.dto.UserCreateDto;
+import hgcha.CodeAgora.entity.Role;
 import hgcha.CodeAgora.entity.User;
 import hgcha.CodeAgora.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class UserService {
                         .username(userCreateDto.getUsername())
                         .password(bCryptPasswordEncoder.encode(userCreateDto.getPassword()))
                         .email(userCreateDto.getEmail())
+                        .role(Role.ROLE_USER)
                         .build();
 
         userRepository.save(user);

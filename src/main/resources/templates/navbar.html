@@ -10,8 +10,13 @@
                 <a class="nav-link fs-4 text-white m-2" href="#">CodeAgora</a>
                 <a class="nav-link text-white p-4" href="/infoBoard">정보 게시판</a>
             </div>
-            <div>
-                <a class="nav-link text-white p-4" href="/users/create">회원가입</a>
+            <div class="d-flex flex-row">
+                <a class="nav-link text-white p-4" sec:authorize="isAnonymous()" href="/loginForm">로그인</a>
+                <a class="nav-link text-white p-4" sec:authorize="isAnonymous()" href="/users/create">회원가입</a>
+                <p class="nav-link text-white p-4 m-0" sec:authorize="isAuthenticated()" th:text="|${#authentication.principal.username}님 안녕하세요!|"></p>
+                <form th:action="@{/logout}" sec:authorize="isAuthenticated()" method="post">
+                    <button type="submit" class="nav-link text-white p-4">로그아웃</button>
+                </form>
             </div>
         </nav>
     </body>

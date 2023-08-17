@@ -11,22 +11,20 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/create")
+    @GetMapping("/users/create")
     public String joinForm(Model model) {
         model.addAttribute("user", new User());
         return "joinForm";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/users/create")
     public String join(@Valid @ModelAttribute("user") UserCreateDto userCreateDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "joinForm";
@@ -34,5 +32,11 @@ public class UserController {
 
         userService.create(userCreateDto);
         return "redirect:/infoBoard";
+    }
+
+    @GetMapping("/loginForm")
+    public String loginForm(Model model) {
+        model.addAttribute("user", new User());
+        return "loginForm";
     }
 }
