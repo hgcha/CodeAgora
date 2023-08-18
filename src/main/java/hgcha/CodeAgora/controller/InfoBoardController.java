@@ -43,6 +43,7 @@ public class InfoBoardController {
         Page<Post> posts = postService.findPosts(pageable);
         model.addAttribute("posts", posts);
         model.addAttribute("groupNumber", posts.getNumber() / 5);
+        model.addAttribute("currentURL", "/infoBoard");
         return "posts";
     }
 
@@ -138,4 +139,15 @@ public class InfoBoardController {
         return "redirect:/infoBoard/{postId}";
     }
 
+    @GetMapping("/search")
+    public String search(@RequestParam String keyword,
+                         @RequestParam(defaultValue = "1") Integer page,
+                         @RequestParam(defaultValue = "10") Integer size,
+                         Model model) {
+        Page<Post> posts = postService.findAllByKeyword(keyword, page - 1, size);
+        model.addAttribute("posts", posts);
+        model.addAttribute("groupNumber", posts.getNumber() / 5);
+        model.addAttribute("currentURL", "/search?keyword=" + keyword);
+        return "posts";
+    }
 }

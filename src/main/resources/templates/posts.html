@@ -9,7 +9,12 @@
     <nav th:replace="~{navbar :: navbar}"></nav>
 
     <div class="w-75 mx-auto">
-        <table class="table mt-5 mx-auto w-100 table-bordered text-center">
+        <form class="w-100 mx-auto d-flex justify-content-end mt-5" th:action="@{/search}" method="get">
+            <input type="text" class="form-control w-25 border-black" name="keyword"/>
+            <button type="submit" class="btn btn-primary">검색</button>
+        </form>
+
+        <table class="table mt-3 mx-auto w-100 table-bordered text-center">
             <tr style="height: 10px;">
                 <th class="w-25">번호</th>
                 <th class="w-50">제목</th>
@@ -24,15 +29,15 @@
 
         <ul class="pagination justify-content-center mt-3">
             <li class="page-item" th:classappend="${posts.isFirst()} ? 'disabled'">
-                <a class="page-link" th:href="@{|/infoBoard?page=${posts.number}|}">이전</a>
+                <a class="page-link" th:href="@{${currentURL}(page=${posts.number})}">이전</a>
             </li>
             <li class="page-item"
                 th:each="num : ${#numbers.sequence(groupNumber * 5 + 1, T(java.lang.Math).min(groupNumber * 5 + 5, posts.getTotalPages()))}"
                 th:classappend="${num} == ${posts.number + 1} ? 'active'">
-                <a class="page-link" th:href="@{|/infoBoard?page=${num}|}" th:text="${num}">1</a>
+                <a class="page-link" th:href="@{${currentURL}(page=${num})}" th:text="${num}">1</a>
             </li>
             <li class="page-item" th:classappend="${posts.isLast()} ? 'disabled'">
-                <a class="page-link" th:href="@{|/infoBoard?page=${posts.number + 2}|}">다음</a>
+                <a class="page-link" th:href="@{${currentURL}(page=${posts.number + 2})}">다음</a>
             </li>
         </ul>
 
