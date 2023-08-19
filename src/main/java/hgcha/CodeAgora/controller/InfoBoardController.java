@@ -1,12 +1,8 @@
 package hgcha.CodeAgora.controller;
 
-import hgcha.CodeAgora.dto.CommentCreateDto;
-import hgcha.CodeAgora.dto.CommentUpdateDto;
-import hgcha.CodeAgora.dto.PostCreateDto;
-import hgcha.CodeAgora.dto.PostUpdateDto;
+import hgcha.CodeAgora.dto.*;
 import hgcha.CodeAgora.entity.Comment;
 import hgcha.CodeAgora.entity.Post;
-import hgcha.CodeAgora.repository.CommentRepository;
 import hgcha.CodeAgora.repository.PostRepository;
 import hgcha.CodeAgora.service.CommentService;
 import hgcha.CodeAgora.service.PostService;
@@ -129,7 +125,6 @@ public class InfoBoardController {
                                 BindingResult bindingResult,
                                 Model model) {
         if (bindingResult.hasErrors()) {
-            log.info("bindingResult = {}", bindingResult);
             model.addAttribute("post", postService.findById(postId));
             model.addAttribute("comment", new Comment());
             return "post";
@@ -140,14 +135,14 @@ public class InfoBoardController {
     }
 
     @GetMapping("/search")
-    public String search(@RequestParam String keyword,
+    public String search(SearchConditionDto searchConditionDto,
                          @RequestParam(defaultValue = "1") Integer page,
                          @RequestParam(defaultValue = "10") Integer size,
                          Model model) {
-        Page<Post> posts = postService.findAllByKeyword(keyword, page - 1, size);
+        Page<Post> posts = postService.findAllByKeyword(searchConditionDto, page - 1, size);
         model.addAttribute("posts", posts);
         model.addAttribute("groupNumber", posts.getNumber() / 5);
-        model.addAttribute("currentURL", "/search?keyword=" + keyword);
+        model.addAttribute("currentURL", "/search?keyword=" + searchConditionDto.getKeyword());
         return "posts";
     }
 }

@@ -1,5 +1,6 @@
 package hgcha.CodeAgora.service;
 
+import hgcha.CodeAgora.dto.SearchConditionDto;
 import hgcha.CodeAgora.entity.Post;
 import hgcha.CodeAgora.repository.CommentRepository;
 import hgcha.CodeAgora.repository.PostRepository;
@@ -34,7 +35,7 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    public Page<Post> findAllByKeyword(String keyword, Integer page, Integer size) {
-        return postRepository.findByKeyword(keyword, page, size);
+    public Page<Post> findAllByKeyword(SearchConditionDto searchConditionDto, Integer page, Integer size) {
+        return postRepository.findBySubjectAndKeyword(searchConditionDto, page, size);
     }
 }
