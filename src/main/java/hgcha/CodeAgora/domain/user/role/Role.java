@@ -1,4 +1,4 @@
-package hgcha.CodeAgora.entity;
+package hgcha.CodeAgora.domain.user.role;
 
 public enum Role {
     ROLE_USER("ROLE_USER"),

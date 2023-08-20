@@ -1,4 +1,4 @@
-package hgcha.CodeAgora.dto;
+package hgcha.CodeAgora.domain.comment.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

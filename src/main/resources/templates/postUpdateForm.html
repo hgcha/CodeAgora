@@ -7,7 +7,7 @@
 </head>
 <body>
     <nav th:replace="~{navbar :: navbar}"></nav>
-    <form class="w-50 h-75 mt-5" style="margin: auto;" th:object="${post}" th:action="@{|/infoBoard/${post.id}/update|}" method="post">
+    <form class="w-50 h-75 mt-5" style="margin: auto;" th:object="${post}" th:action="@{|/info/${post.id}/update|}" method="post">
 
         <input type="hidden" name="id" th:value="${post.id}"/>
 

@@ -1,20 +1,18 @@
-package hgcha.CodeAgora.repository;
+package hgcha.CodeAgora.domain.post.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import hgcha.CodeAgora.dto.SearchConditionDto;
-import hgcha.CodeAgora.entity.Post;
+import hgcha.CodeAgora.domain.post.dto.SearchConditionDto;
+import hgcha.CodeAgora.domain.post.entity.Post;
 import jakarta.persistence.EntityManager;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
-import static hgcha.CodeAgora.entity.QPost.post;
+import static hgcha.CodeAgora.domain.post.entity.QPost.post;
 
-@Slf4j
 public class PostQueryDSLRepositoryImpl implements PostQueryDSLRepository {
 
     private final JPAQueryFactory query;
@@ -24,7 +22,7 @@ public class PostQueryDSLRepositoryImpl implements PostQueryDSLRepository {
     }
 
     @Override
-    public Page<Post> findBySubjectAndKeyword(SearchConditionDto searchConditionDto, Integer page, Integer size) {
+    public Page<Post> findAllBySubjectAndKeyword(SearchConditionDto searchConditionDto, Integer page, Integer size) {
 
         BooleanExpression whereCondition = null;
         if (searchConditionDto.getSubject().equals("title")) {

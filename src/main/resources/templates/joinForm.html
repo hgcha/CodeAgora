@@ -7,7 +7,7 @@
 </head>
 <body>
     <nav th:replace="~{navbar :: navbar}"></nav>
-    <form class="mt-5 w-50 mx-auto bg-secondary-subtle p-4 rounded" th:object="${user}" th:action="@{/users/create}" method="post">
+    <form class="mt-5 w-50 mx-auto bg-secondary-subtle p-4 rounded" th:object="${user}" th:action="@{/join}" method="post">
 
         <label th:for="username" class="form-label">이름</label>
         <input type="text" class="form-control" th:field="*{username}" th:errorclass="is-invalid"/>

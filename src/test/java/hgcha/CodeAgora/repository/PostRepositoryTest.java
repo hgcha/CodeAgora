@@ -1,7 +1,8 @@
 package hgcha.CodeAgora.repository;
 
-import hgcha.CodeAgora.entity.Post;
-import hgcha.CodeAgora.entity.User;
+import hgcha.CodeAgora.domain.post.repository.PostRepository;
+import hgcha.CodeAgora.domain.post.entity.Post;
+import hgcha.CodeAgora.domain.user.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

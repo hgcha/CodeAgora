@@ -1,6 +1,6 @@
-package hgcha.CodeAgora.repository;
+package hgcha.CodeAgora.domain.post.repository;
 
-import hgcha.CodeAgora.entity.Post;
+import hgcha.CodeAgora.domain.post.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,9 +1,9 @@
-package hgcha.CodeAgora.service;
+package hgcha.CodeAgora.domain.user.service;
 
-import hgcha.CodeAgora.dto.UserCreateDto;
-import hgcha.CodeAgora.entity.Role;
-import hgcha.CodeAgora.entity.User;
-import hgcha.CodeAgora.repository.UserRepository;
+import hgcha.CodeAgora.domain.user.dto.UserCreateDto;
+import hgcha.CodeAgora.domain.user.role.Role;
+import hgcha.CodeAgora.domain.user.entity.User;
+import hgcha.CodeAgora.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

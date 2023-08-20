@@ -1,4 +1,4 @@
-package hgcha.CodeAgora.dto;
+package hgcha.CodeAgora.domain.user.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

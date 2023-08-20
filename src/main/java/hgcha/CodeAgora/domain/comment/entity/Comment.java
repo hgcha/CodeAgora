@@ -1,10 +1,11 @@
-package hgcha.CodeAgora.entity;
+package hgcha.CodeAgora.domain.comment.entity;
 
+import hgcha.CodeAgora.domain.post.entity.Post;
+import hgcha.CodeAgora.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -14,7 +15,6 @@ import java.util.Objects;
 @Entity
 @Getter
 @NoArgsConstructor
-@ToString
 public class Comment {
 
     @Id

@@ -1,9 +1,9 @@
 package hgcha.CodeAgora;
 
-import hgcha.CodeAgora.entity.Post;
-import hgcha.CodeAgora.entity.User;
-import hgcha.CodeAgora.repository.PostRepository;
-import hgcha.CodeAgora.repository.UserRepository;
+import hgcha.CodeAgora.domain.post.entity.Post;
+import hgcha.CodeAgora.domain.user.entity.User;
+import hgcha.CodeAgora.domain.post.repository.PostRepository;
+import hgcha.CodeAgora.domain.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

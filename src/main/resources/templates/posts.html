@@ -9,7 +9,7 @@
     <nav th:replace="~{navbar :: navbar}"></nav>
 
     <div class="w-75 mx-auto">
-        <form class="w-100 mx-auto d-flex justify-content-end mt-5" th:action="@{/search}" method="get">
+        <form class="w-100 mx-auto d-flex justify-content-end mt-5" th:action="@{/info/search}" method="get">
             <select name="subject" class="form-select border-black text-center" style="width: 9%;">
                 <option value="title" class="text-center">제목</option>
                 <option value="content" class="text-center">내용</option>
@@ -27,26 +27,26 @@
             </tr>
             <tr th:each="post : ${posts}">
                 <td th:text="${post.id}">게시글 번호</td>
-                <td><a th:href="@{|/infoBoard/${post.id}|}" th:text="${post.title}">게시글 제목</a></td>
+                <td><a th:href="@{|/info/${post.id}|}" th:text="${post.title}">게시글 제목</a></td>
                 <td th:text="${#temporals.format(post.createdAt, 'MM/dd')}">게시글 시간</td>
             </tr>
         </table>
 
-        <ul class="pagination justify-content-center mt-3">
+        <ul class="pagination justify-content-center mt-3" th:with="groupNumber=${(posts.number - (posts.number % 5)) / 5}, totalPages=${posts.totalPages == 0 ? 1 : posts.totalPages}">
             <li class="page-item" th:classappend="${posts.isFirst()} ? 'disabled'">
-                <a class="page-link" th:href="@{${currentURL}(page=${posts.number})}">이전</a>
+                <a class="page-link" th:href="@{${requestURI}(page=${posts.number})}">이전</a>
             </li>
             <li class="page-item"
-                th:each="num : ${#numbers.sequence(groupNumber * 5 + 1, T(java.lang.Math).min(groupNumber * 5 + 5, posts.getTotalPages()))}"
+                th:each="num : ${#numbers.sequence(groupNumber * 5 + 1, T(java.lang.Math).min(groupNumber * 5 + 5, totalPages))}"
                 th:classappend="${num} == ${posts.number + 1} ? 'active'">
-                <a class="page-link" th:href="@{${currentURL}(page=${num})}" th:text="${num}">1</a>
+                <a class="page-link" th:href="@{${requestURI}(page=${num})}" th:text="${num}">1</a>
             </li>
             <li class="page-item" th:classappend="${posts.isLast()} ? 'disabled'">
-                <a class="page-link" th:href="@{${currentURL}(page=${posts.number + 2})}">다음</a>
+                <a class="page-link" th:href="@{${requestURI}(page=${posts.number + 2})}">다음</a>
             </li>
         </ul>
 
-        <a class="btn btn-primary" style="float: right;" sec:authorize="isAuthenticated()" th:href="@{/infoBoard/create}">새 글 작성</a>
+        <a class="btn btn-primary" style="float: right;" sec:authorize="isAuthenticated()" th:href="@{/info/create}">새 글 작성</a>
     </div>
 </body>
 </html>

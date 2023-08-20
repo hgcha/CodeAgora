@@ -1,7 +1,7 @@
 package hgcha.CodeAgora.auth;
 
-import hgcha.CodeAgora.entity.User;
-import hgcha.CodeAgora.repository.UserRepository;
+import hgcha.CodeAgora.domain.user.entity.User;
+import hgcha.CodeAgora.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

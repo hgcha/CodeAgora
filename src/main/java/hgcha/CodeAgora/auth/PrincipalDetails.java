@@ -1,6 +1,6 @@
 package hgcha.CodeAgora.auth;
 
-import hgcha.CodeAgora.entity.User;
+import hgcha.CodeAgora.domain.user.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

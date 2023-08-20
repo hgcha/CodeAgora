@@ -1,52 +1,47 @@
 package hgcha.CodeAgora.controller;
 
-import hgcha.CodeAgora.dto.*;
-import hgcha.CodeAgora.entity.Comment;
-import hgcha.CodeAgora.entity.Post;
-import hgcha.CodeAgora.repository.PostRepository;
-import hgcha.CodeAgora.service.CommentService;
-import hgcha.CodeAgora.service.PostService;
-import hgcha.CodeAgora.service.UserService;
+import hgcha.CodeAgora.domain.comment.dto.CommentCreateDto;
+import hgcha.CodeAgora.domain.comment.dto.CommentUpdateDto;
+import hgcha.CodeAgora.domain.comment.entity.Comment;
+import hgcha.CodeAgora.domain.comment.service.CommentService;
+import hgcha.CodeAgora.domain.post.dto.PostCreateDto;
+import hgcha.CodeAgora.domain.post.dto.PostUpdateDto;
+import hgcha.CodeAgora.domain.post.dto.SearchConditionDto;
+import hgcha.CodeAgora.domain.post.entity.Post;
+import hgcha.CodeAgora.domain.post.service.PostService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * 정보게시판 컨트롤러
+ */
 @Controller
 @RequiredArgsConstructor
-@RequestMapping({"/infoBoard", "/"})
+@RequestMapping("/info")
 @Slf4j
 public class InfoBoardController {
 
     private final PostService postService;
-    private final UserService userService;
-    private final PostRepository postRepository;
     private final CommentService commentService;
 
     @GetMapping
-    public String list(
-            @RequestParam(defaultValue = "1") Integer page,
-            @RequestParam(defaultValue = "10") Integer size,
-            Model model) {
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        Page<Post> posts = postService.findPosts(pageable);
-        model.addAttribute("posts", posts);
-        model.addAttribute("groupNumber", posts.getNumber() / 5);
-        model.addAttribute("currentURL", "/infoBoard");
+    public String list(HttpServletRequest request,
+                       @RequestParam(defaultValue = "1") Integer page,
+                       @RequestParam(defaultValue = "10") Integer size,
+                       Model model) {
+        model.addAttribute("posts", postService.findPosts(page, size));
+        model.addAttribute("requestURI", request.getRequestURI());
         return "posts";
     }
 
     @GetMapping("/{postId}")
     public String post(@PathVariable Long postId, Model model) {
-        Post post = postService.findById(postId);
-        log.info("post={}", post.getAuthor());
         model.addAttribute("post", postService.findById(postId));
         model.addAttribute("comment", new Comment());
         return "post";
@@ -61,32 +56,11 @@ public class InfoBoardController {
     @PostMapping("/create")
     public String create(@Valid @ModelAttribute(name = "post") PostCreateDto postCreateDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            log.info("bindingResult = {}", bindingResult);
             return "postCreateForm";
         }
 
-        Post post = Post.builder()
-                        .author(userService.findByUsername(postCreateDto.getUsername()))
-                        .title(postCreateDto.getTitle())
-                        .content(postCreateDto.getContent())
-                        .build();
-
-        Post savedPost = postRepository.save(post);
-        return "redirect:/infoBoard/" + savedPost.getId();
-    }
-
-    @PostMapping("/{postId}/comments")
-    public String createComment(@PathVariable Long postId,
-                                @Valid @ModelAttribute("comment") CommentCreateDto commentCreateDto,
-                                BindingResult bindingResult,
-                                Model model) {
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("post", postService.findById(postId));
-            return "post";
-        }
-
-        commentService.create(commentCreateDto);
-        return "redirect:/infoBoard/{postId}";
+        Post newPost = postService.createPost(postCreateDto);
+        return "redirect:/info/" + newPost.getId();
     }
 
     @GetMapping("/{postId}/update")
@@ -96,27 +70,40 @@ public class InfoBoardController {
     }
 
     @PostMapping("/{postId}/update")
-    public String update(@PathVariable Long postId, @Valid @ModelAttribute("post") PostUpdateDto postUpdateDto, BindingResult bindingResult) {
+    public String update(@Valid @ModelAttribute("post") PostUpdateDto postUpdateDto,
+                         BindingResult bindingResult) {
+
         if (bindingResult.hasErrors()) {
             return "postUpdateForm";
         }
-        Post post = postService.findById(postId);
-        post.setTitle(postUpdateDto.getTitle());
-        post.setContent(postUpdateDto.getContent());
-        postRepository.save(post);
-        return "redirect:/infoBoard/{postId}";
+
+        postService.updatePost(postUpdateDto);
+        return "redirect:/info/{postId}";
     }
 
     @PostMapping("/{postId}/delete")
     public String delete(@PathVariable Long postId) {
-        postService.delete(postId);
-        return "redirect:/infoBoard";
+        postService.deletePost(postId);
+        return "redirect:/info";
+    }
+
+    @PostMapping("/{postId}/comments/create")
+    public String createComment(@Valid @ModelAttribute("comment") CommentCreateDto commentCreateDto,
+                                BindingResult bindingResult,
+                                Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("post", postService.findById(commentCreateDto.getPostId()));
+            return "post";
+        }
+
+        commentService.create(commentCreateDto);
+        return "redirect:/info/{postId}";
     }
 
     @PostMapping("/{postId}/comments/{commentId}/delete")
     public String deleteComment(@PathVariable Long commentId) {
-        commentService.delete(commentId);
-        return "redirect:/infoBoard/{postId}";
+        commentService.deleteComment(commentId);
+        return "redirect:/info/{postId}";
     }
 
     @PostMapping("/{postId}/comments/{commentId}/update")
@@ -130,19 +117,24 @@ public class InfoBoardController {
             return "post";
         }
 
-        commentService.update(commentUpdateDto);
-        return "redirect:/infoBoard/{postId}";
+        commentService.updateComment(commentUpdateDto);
+        return "redirect:/info/{postId}";
     }
 
     @GetMapping("/search")
-    public String search(SearchConditionDto searchConditionDto,
+    public String search(HttpServletRequest request,
+                         SearchConditionDto searchConditionDto,
                          @RequestParam(defaultValue = "1") Integer page,
                          @RequestParam(defaultValue = "10") Integer size,
                          Model model) {
-        Page<Post> posts = postService.findAllByKeyword(searchConditionDto, page - 1, size);
-        model.addAttribute("posts", posts);
-        model.addAttribute("groupNumber", posts.getNumber() / 5);
-        model.addAttribute("currentURL", "/search?keyword=" + searchConditionDto.getKeyword());
+        model.addAttribute("posts", postService.findAllBySubjectAndKeyword(searchConditionDto, page - 1, size));
+        model.addAttribute("requestURI", getRequestURIForSearch(request, searchConditionDto));
         return "posts";
+    }
+
+    private String getRequestURIForSearch(HttpServletRequest request, SearchConditionDto searchConditionDto) {
+        return request.getRequestURI()
+                + "?subject=" + searchConditionDto.getSubject()
+                + "&keyword=" + searchConditionDto.getKeyword();
     }
 }

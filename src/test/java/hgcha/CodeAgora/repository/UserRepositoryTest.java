@@ -1,6 +1,7 @@
 package hgcha.CodeAgora.repository;
 
-import hgcha.CodeAgora.entity.User;
+import hgcha.CodeAgora.domain.user.repository.UserRepository;
+import hgcha.CodeAgora.domain.user.entity.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

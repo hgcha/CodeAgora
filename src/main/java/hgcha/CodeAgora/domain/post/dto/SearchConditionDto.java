@@ -1,4 +1,4 @@
-package hgcha.CodeAgora.dto;
+package hgcha.CodeAgora.domain.post.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

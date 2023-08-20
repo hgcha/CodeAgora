@@ -1,5 +1,6 @@
-package hgcha.CodeAgora.entity;
+package hgcha.CodeAgora.domain.user.entity;
 
+import hgcha.CodeAgora.domain.user.role.Role;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
