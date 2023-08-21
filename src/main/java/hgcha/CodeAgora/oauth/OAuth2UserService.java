@@ -22,6 +22,8 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
+        System.out.println("attributes = " + super.loadUser(userRequest).getAttributes());
+
         OAuth2UserInfo oAuth2UserInfo;
         if (userRequest.getClientRegistration().getRegistrationId().equals("google")) {
             oAuth2UserInfo = new GoogleOAuth2UserInfo(super.loadUser(userRequest).getAttributes());
