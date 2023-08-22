@@ -1,9 +1,12 @@
 package hgcha.CodeAgora.controller;
 
+import hgcha.CodeAgora.auth.PrincipalDetails;
 import hgcha.CodeAgora.domain.comment.dto.CommentCreateDto;
 import hgcha.CodeAgora.domain.comment.dto.CommentUpdateDto;
 import hgcha.CodeAgora.domain.comment.entity.Comment;
 import hgcha.CodeAgora.domain.comment.service.CommentService;
+import hgcha.CodeAgora.domain.like.service.LikeService;
+import hgcha.CodeAgora.domain.like.dto.LikeDto;
 import hgcha.CodeAgora.domain.post.dto.PostCreateDto;
 import hgcha.CodeAgora.domain.post.dto.PostUpdateDto;
 import hgcha.CodeAgora.domain.post.dto.SearchConditionDto;
@@ -13,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,6 +33,7 @@ public class InfoBoardController {
 
     private final PostService postService;
     private final CommentService commentService;
+    private final LikeService likeService;
 
     @GetMapping
     public String list(HttpServletRequest request,
@@ -41,9 +46,13 @@ public class InfoBoardController {
     }
 
     @GetMapping("/{postId}")
-    public String post(@PathVariable Long postId, Model model) {
-        model.addAttribute("post", postService.findById(postId));
+    public String post(@PathVariable Long postId, @AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
+        Post post = postService.findById(postId);
+        model.addAttribute("post", post);
         model.addAttribute("comment", new Comment());
+        if (principalDetails != null) {
+            model.addAttribute("isLiked", likeService.existsByPostAndUser(post, principalDetails.getUser()));
+        }
         return "post";
     }
 
@@ -136,5 +145,11 @@ public class InfoBoardController {
         return request.getRequestURI()
                 + "?subject=" + searchConditionDto.getSubject()
                 + "&keyword=" + searchConditionDto.getKeyword();
+    }
+
+    @PostMapping("/{postId}/like")
+    public String like(@PathVariable Long postId, LikeDto likeDto, Model model) {
+        likeService.likeOrDislikePost(likeDto);
+        return "redirect:/info/{postId}";
     }
 }
