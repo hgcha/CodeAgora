@@ -3,6 +3,7 @@ package hgcha.CodeAgora.controller;
 import hgcha.CodeAgora.auth.PrincipalDetails;
 import hgcha.CodeAgora.domain.comment.dto.CommentCreateDto;
 import hgcha.CodeAgora.domain.comment.dto.CommentUpdateDto;
+import hgcha.CodeAgora.domain.comment.dto.CommentVoteDto;
 import hgcha.CodeAgora.domain.comment.entity.Comment;
 import hgcha.CodeAgora.domain.comment.service.CommentService;
 import hgcha.CodeAgora.domain.like.service.LikeService;
@@ -148,8 +149,15 @@ public class InfoBoardController {
     }
 
     @PostMapping("/{postId}/like")
-    public String like(@PathVariable Long postId, LikeDto likeDto, Model model) {
+    public String likePost(@PathVariable Long postId, LikeDto likeDto) {
         likeService.likeOrDislikePost(likeDto);
         return "redirect:/info/{postId}";
     }
+
+    @PostMapping("/{postId}/comments/{commentId}/vote")
+    public String voteComment(@PathVariable Long postId, CommentVoteDto commentVoteDto) {
+        commentService.voteComment(commentVoteDto);
+        return "redirect:/info/{postId}";
+    }
+
 }
