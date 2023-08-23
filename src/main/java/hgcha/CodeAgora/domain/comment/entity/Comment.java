@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -28,6 +29,9 @@ public class Comment {
     private Post post;
 
     private String content;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
+    List<CommentVote> commentVotes;
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -68,4 +72,25 @@ public class Comment {
     public void setContent(String content) {
         this.content = content;
     }
+
+    public List<CommentVote> getLikes() {
+        return commentVotes.stream().filter(commentVote -> commentVote.isLike()).toList();
+    }
+
+    public List<CommentVote> getDislikes() {
+        return commentVotes.stream().filter(commentVote -> !commentVote.isLike()).toList();
+    }
+
+    public boolean isLikedByUser(User user) {
+        return commentVotes.stream()
+                    .filter(commentVote -> commentVote.isLike())
+                    .anyMatch(commentVote -> commentVote.getUser().equals(user));
+    }
+
+    public boolean isDislikedByUser(User user) {
+        return commentVotes.stream()
+                           .filter(commentVote -> !commentVote.isLike())
+                           .anyMatch(commentVote -> commentVote.getUser().equals(user));
+    }
+
 }

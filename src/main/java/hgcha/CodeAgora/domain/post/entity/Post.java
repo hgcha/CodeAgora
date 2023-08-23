@@ -32,6 +32,9 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Comment> comments;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    private List<PostVote> likes;
+
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;

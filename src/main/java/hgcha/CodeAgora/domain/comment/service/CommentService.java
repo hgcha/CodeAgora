@@ -2,9 +2,13 @@ package hgcha.CodeAgora.domain.comment.service;
 
 import hgcha.CodeAgora.domain.comment.dto.CommentCreateDto;
 import hgcha.CodeAgora.domain.comment.dto.CommentUpdateDto;
+import hgcha.CodeAgora.domain.comment.dto.CommentVoteDto;
 import hgcha.CodeAgora.domain.comment.entity.Comment;
+import hgcha.CodeAgora.domain.comment.entity.CommentVote;
 import hgcha.CodeAgora.domain.comment.repository.CommentRepository;
+import hgcha.CodeAgora.domain.comment.repository.CommentVoteRepository;
 import hgcha.CodeAgora.domain.post.repository.PostRepository;
+import hgcha.CodeAgora.domain.user.entity.User;
 import hgcha.CodeAgora.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final CommentVoteRepository commentVoteRepository;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
@@ -38,6 +43,23 @@ public class CommentService {
     public void deleteComment(Long id) {
         Comment comment = commentRepository.findById(id).orElseThrow();
         commentRepository.delete(comment);
+    }
+
+    public void voteComment(CommentVoteDto commentVoteDto) {
+        Comment comment = commentRepository.findById(commentVoteDto.getCommentId()).orElseThrow();
+        User user = userRepository.findByUsername(commentVoteDto.getUsername()).orElseThrow();
+
+        commentVoteRepository.findByCommentAndUser(comment, user).ifPresentOrElse(
+                commentVote -> {
+                    if (commentVote.isLike() == commentVoteDto.isLike()) {
+                        commentVoteRepository.delete(commentVote);
+                    } else {
+                        commentVote.setLike(!commentVote.isLike());
+                        commentVoteRepository.save(commentVote);
+                    }
+                },
+                () -> commentVoteRepository.save(new CommentVote(comment, user, commentVoteDto.isLike()))
+        );
     }
 
 }

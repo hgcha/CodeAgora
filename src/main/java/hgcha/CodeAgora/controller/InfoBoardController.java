@@ -1,9 +1,12 @@
 package hgcha.CodeAgora.controller;
 
+import hgcha.CodeAgora.auth.PrincipalDetails;
 import hgcha.CodeAgora.domain.comment.dto.CommentCreateDto;
 import hgcha.CodeAgora.domain.comment.dto.CommentUpdateDto;
+import hgcha.CodeAgora.domain.comment.dto.CommentVoteDto;
 import hgcha.CodeAgora.domain.comment.entity.Comment;
 import hgcha.CodeAgora.domain.comment.service.CommentService;
+import hgcha.CodeAgora.domain.post.dto.PostVoteDto;
 import hgcha.CodeAgora.domain.post.dto.PostCreateDto;
 import hgcha.CodeAgora.domain.post.dto.PostUpdateDto;
 import hgcha.CodeAgora.domain.post.dto.SearchConditionDto;
@@ -13,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -41,9 +45,13 @@ public class InfoBoardController {
     }
 
     @GetMapping("/{postId}")
-    public String post(@PathVariable Long postId, Model model) {
-        model.addAttribute("post", postService.findById(postId));
+    public String post(@PathVariable Long postId, @AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
+        Post post = postService.findById(postId);
+        model.addAttribute("post", post);
         model.addAttribute("comment", new Comment());
+        if (principalDetails != null) {
+            model.addAttribute("isLiked", postService.existsByPostAndUser(post, principalDetails.getUser()));
+        }
         return "post";
     }
 
@@ -137,4 +145,17 @@ public class InfoBoardController {
                 + "?subject=" + searchConditionDto.getSubject()
                 + "&keyword=" + searchConditionDto.getKeyword();
     }
+
+    @PostMapping("/{postId}/like")
+    public String likePost(@PathVariable Long postId, PostVoteDto postVoteDto) {
+        postService.likeOrDislikePost(postVoteDto);
+        return "redirect:/info/{postId}";
+    }
+
+    @PostMapping("/{postId}/comments/{commentId}/vote")
+    public String voteComment(@PathVariable Long postId, CommentVoteDto commentVoteDto) {
+        commentService.voteComment(commentVoteDto);
+        return "redirect:/info/{postId}";
+    }
+
 }

@@ -2,10 +2,14 @@ package hgcha.CodeAgora.domain.post.service;
 
 import hgcha.CodeAgora.domain.post.dto.PostCreateDto;
 import hgcha.CodeAgora.domain.post.dto.PostUpdateDto;
+import hgcha.CodeAgora.domain.post.dto.PostVoteDto;
 import hgcha.CodeAgora.domain.post.dto.SearchConditionDto;
 import hgcha.CodeAgora.domain.post.entity.Post;
 import hgcha.CodeAgora.domain.comment.repository.CommentRepository;
+import hgcha.CodeAgora.domain.post.entity.PostVote;
 import hgcha.CodeAgora.domain.post.repository.PostRepository;
+import hgcha.CodeAgora.domain.post.repository.PostVoteRepository;
+import hgcha.CodeAgora.domain.user.entity.User;
 import hgcha.CodeAgora.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +23,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final PostVoteRepository postVoteRepository;
 
     public Post findById(Long id) {
         return postRepository.findById(id).orElseThrow();
@@ -50,4 +55,19 @@ public class PostService {
     public Page<Post> findAllBySubjectAndKeyword(SearchConditionDto searchConditionDto, Integer page, Integer size) {
         return postRepository.findAllBySubjectAndKeyword(searchConditionDto, page, size);
     }
+
+    public void likeOrDislikePost(PostVoteDto postVoteDto) {
+        Post post = postRepository.findById(postVoteDto.getPostId()).orElseThrow();
+        User user = userRepository.findByUsername(postVoteDto.getUsername()).orElseThrow();
+
+        postVoteRepository.findByPostAndUser(post, user).ifPresentOrElse(
+                like -> postVoteRepository.delete(like),
+                () -> postVoteRepository.save(new PostVote(post, user))
+        );
+    }
+
+    public boolean existsByPostAndUser(Post post, User user) {
+        return postVoteRepository.existsByPostAndUser(post, user);
+    }
+
 }
