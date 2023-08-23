@@ -54,4 +54,8 @@ public class User {
     public int hashCode() {
         return Objects.hash(username, password, email, joinedAt);
     }
+
+    public void setPassword(String newEncodedPassword) {
+        this.password = newEncodedPassword;
+    }
 }
