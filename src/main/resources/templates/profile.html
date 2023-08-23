@@ -8,46 +8,42 @@
 <body>
     <nav th:replace="~{navbar :: navbar}"></nav>
 
-    <div class="w-50 border border-black p-3 mx-auto mb-3 mt-4">
+    <div class="w-50 bg-light p-3 mx-auto mb-3 mt-4 rounded-4 shadow">
         <div class="mb-4">
             <p>아이디</p>
-            <input class="d-block" type="text" size="30" th:value="${#authentication.principal.username}" value="이름" disabled readonly/>
+            <input class="form-control" type="text" size="30" th:value="${#authentication.principal.username}" value="이름" disabled readonly/>
         </div>
         <div class="my-1">
             <p>이메일</p>
-            <input class="d-block" type="text" th:value="${#authentication.principal.user.email}" value="이메일" disabled readonly/>
+            <input class="form-control" type="text" id="email" th:value="${#authentication.principal.user.email}" value="이메일" disabled readonly/>
         </div>
-        <form class="d-flex justify-content-end" th:action="@{/profile/change-password}" method="get">
-            <button type="submit">비밀번호 변경하기</button>
+        <form class="d-flex justify-content-end mt-4" th:action="@{/profile/change-password}" method="get">
+            <button type="submit" class="btn btn-outline-secondary">비밀번호 변경하기</button>
         </form>
     </div>
 
-    <div class="container w-50 mx-auto border border-black text-center">
+    <div class="container w-50 mx-auto text-center">
         <div class="row">
-            <div class="col m-1 p-2 border border-black">
+            <div class="col m-1 p-3 bg-light rounded-4 shadow">
                 <h5>최근에 작성한 글</h5>
                 <ul class="list-group">
-                    <li class="list-group-item list-group-item-action">글1</li>
-                    <li class="list-group-item list-group-item-action">글2</li>
-                    <li class="list-group-item list-group-item-action">글3</li>
-                    <li class="list-group-item list-group-item-action">글4</li>
-                    <li class="list-group-item list-group-item-action">글5</li>
+                    <li class="list-group-item list-group-item-action" th:each="post : ${posts}">
+                        <a th:href="|/info/${post.id}|" th:text="${post.title}"></a>
+                    </li>
                 </ul>
                 <div class="d-flex justify-content-end mt-1">
-                    <a href="/">더보기</a>
+                    <a href="/recentPosts">더보기</a>
                 </div>
             </div>
-            <div class="col m-1 p-2 border border-black">
+            <div class="col m-1 p-3 bg-light rounded-4 shadow">
                 <h5>최근에 작성한 댓글</h5>
                 <ul class="list-group">
-                    <li class="list-group-item list-group-item-action">댓글1</li>
-                    <li class="list-group-item list-group-item-action">댓글2</li>
-                    <li class="list-group-item list-group-item-action">댓글3</li>
-                    <li class="list-group-item list-group-item-action">댓글4</li>
-                    <li class="list-group-item list-group-item-action">댓글5</li>
+                    <li class="list-group-item list-group-item-action" th:each="comment : ${comments}">
+                        <a th:href="|/info/${comment.post.id}|" th:text="${comment.content}"></a>
+                    </li>
                 </ul>
                 <div class="d-flex justify-content-end mt-1">
-                    <a href="/">더보기</a>
+                    <a href="/recentComments">더보기</a>
                 </div>
             </div>
         </div>

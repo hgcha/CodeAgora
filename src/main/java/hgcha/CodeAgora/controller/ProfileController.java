@@ -1,8 +1,10 @@
 package hgcha.CodeAgora.controller;
 
+import hgcha.CodeAgora.domain.comment.service.CommentService;
+import hgcha.CodeAgora.domain.post.service.PostService;
 import hgcha.CodeAgora.domain.user.dto.ChangePasswordDto;
 import hgcha.CodeAgora.domain.user.entity.User;
-import hgcha.CodeAgora.domain.user.repository.UserRepository;
+import hgcha.CodeAgora.domain.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,11 +24,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequiredArgsConstructor
 public class ProfileController {
 
-    private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserService userService;
+    private final PostService postService;
+    private final CommentService commentService;
 
     @GetMapping
-    public String profile() {
+    public String profile(@AuthenticationPrincipal(expression = "user") User user, Model model) {
+        model.addAttribute("posts", postService.getRecentPosts(user));
+        model.addAttribute("comments", commentService.getRecentComments(user));
         return "profile";
     }
 
@@ -65,8 +71,7 @@ public class ProfileController {
             return "changePasswordForm";
         }
 
-        user.setPassword(bCryptPasswordEncoder.encode(changePasswordDto.getNewPassword()));
-        userRepository.save(user);
+        userService.changePassword(user, changePasswordDto.getNewPassword());
 
         redirectAttributes.addAttribute("result", "success");
         return "redirect:/profile/change-password";

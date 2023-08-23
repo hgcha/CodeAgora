@@ -17,6 +17,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PostService {
@@ -68,6 +70,10 @@ public class PostService {
 
     public boolean existsByPostAndUser(Post post, User user) {
         return postVoteRepository.existsByPostAndUser(post, user);
+    }
+
+    public List<Post> getRecentPosts(User user) {
+        return postRepository.findTop5ByAuthorOrderByCreatedAtDesc(user);
     }
 
 }

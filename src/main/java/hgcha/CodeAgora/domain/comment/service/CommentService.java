@@ -13,6 +13,8 @@ import hgcha.CodeAgora.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -62,4 +64,7 @@ public class CommentService {
         );
     }
 
+    public List<Comment> getRecentComments(User user) {
+        return commentRepository.findTop5ByAuthorOrderByCreatedAtDesc(user);
+    }
 }
