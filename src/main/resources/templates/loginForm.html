@@ -7,7 +7,8 @@
 </head>
 <body>
     <nav th:replace="~{navbar :: navbar}"></nav>
-    <form class="mt-5 w-50 mx-auto bg-secondary-subtle p-4 rounded" th:object="${user}" th:action="@{/login}" method="post">
+    <div class="mt-5 w-50 mx-auto bg-secondary-subtle p-4 rounded-4">
+    <form th:object="${user}" th:action="@{/login}" method="post">
 
         <label th:for="username" class="form-label">아이디</label>
         <input type="text" class="form-control" th:field="*{username}" th:errorclass="is-invalid"/>
@@ -26,6 +27,31 @@
         </div>
 
     </form>
+
+        <div class="my-1 p-2 bg-white rounded-4 w-50 mx-auto text-center">
+            <a href="/oauth2/authorization/google" class="btn" style="text-decoration: none;">
+                <img width="50" height="50" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="google-logo"/>
+                <div class="d-inline mx-auto ml-3">
+                    구글 아이디로 로그인
+                </div>
+            </a>
+        </div>
+
+        <div class="my-1 p-2 bg-white rounded-4 w-50 mx-auto text-center">
+            <a href="/oauth2/authorization/naver" class="btn" style="text-decoration: none;">
+                <img width="50" height="50" src="https://i.namu.wiki/i/OTvaDTe2CSMobFJOW_Hut58QTAjpPcrX9aaTomtSoOZvnUNqehGMUSX6ZupycLHxSiEy_mkXaEPJuzXG_AKAXAc4xjP3vWyvecNu0SGk3NKYXVGmJAxTrCE0fSxnL0bi3HoHiMsTMvM0DMY7ILIxmA.svg"/>
+                <span>네이버 아이디로 로그인</span>
+            </a>
+        </div>
+
+        <div class="my-1 p-2 bg-white rounded-4 w-50 mx-auto text-center" style="text-decoration: none;">
+            <a href="/oauth2/authorization/kakao" class="btn" style="text-decoration: none;">
+                <img width="50" height="50" src="https://upload.wikimedia.org/wikipedia/commons/e/e3/KakaoTalk_logo.svg"/>
+                <span>카카오 아이디로 로그인</span>
+            </a>
+        </div>
+
+    </div>
 
 </body>
 </html>
