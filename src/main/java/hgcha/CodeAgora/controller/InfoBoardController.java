@@ -6,8 +6,7 @@ import hgcha.CodeAgora.domain.comment.dto.CommentUpdateDto;
 import hgcha.CodeAgora.domain.comment.dto.CommentVoteDto;
 import hgcha.CodeAgora.domain.comment.entity.Comment;
 import hgcha.CodeAgora.domain.comment.service.CommentService;
-import hgcha.CodeAgora.domain.like.service.LikeService;
-import hgcha.CodeAgora.domain.like.dto.LikeDto;
+import hgcha.CodeAgora.domain.post.dto.PostVoteDto;
 import hgcha.CodeAgora.domain.post.dto.PostCreateDto;
 import hgcha.CodeAgora.domain.post.dto.PostUpdateDto;
 import hgcha.CodeAgora.domain.post.dto.SearchConditionDto;
@@ -34,7 +33,6 @@ public class InfoBoardController {
 
     private final PostService postService;
     private final CommentService commentService;
-    private final LikeService likeService;
 
     @GetMapping
     public String list(HttpServletRequest request,
@@ -52,7 +50,7 @@ public class InfoBoardController {
         model.addAttribute("post", post);
         model.addAttribute("comment", new Comment());
         if (principalDetails != null) {
-            model.addAttribute("isLiked", likeService.existsByPostAndUser(post, principalDetails.getUser()));
+            model.addAttribute("isLiked", postService.existsByPostAndUser(post, principalDetails.getUser()));
         }
         return "post";
     }
@@ -149,8 +147,8 @@ public class InfoBoardController {
     }
 
     @PostMapping("/{postId}/like")
-    public String likePost(@PathVariable Long postId, LikeDto likeDto) {
-        likeService.likeOrDislikePost(likeDto);
+    public String likePost(@PathVariable Long postId, PostVoteDto postVoteDto) {
+        postService.likeOrDislikePost(postVoteDto);
         return "redirect:/info/{postId}";
     }
 

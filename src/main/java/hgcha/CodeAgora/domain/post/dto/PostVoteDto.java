@@ -1,11 +1,11 @@
-package hgcha.CodeAgora.domain.like.dto;
+package hgcha.CodeAgora.domain.post.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class LikeDto {
+public class PostVoteDto {
 
     private Long postId;
 

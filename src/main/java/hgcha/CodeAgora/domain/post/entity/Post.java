@@ -1,7 +1,6 @@
 package hgcha.CodeAgora.domain.post.entity;
 
 import hgcha.CodeAgora.domain.comment.entity.Comment;
-import hgcha.CodeAgora.domain.like.entity.Like;
 import hgcha.CodeAgora.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -34,7 +33,7 @@ public class Post {
     private List<Comment> comments;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-    private List<Like> likes;
+    private List<PostVote> likes;
 
     @CreationTimestamp
     @Column(name = "created_at")
