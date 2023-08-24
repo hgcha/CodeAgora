@@ -17,9 +17,9 @@
             <p>이메일</p>
             <input class="form-control" type="text" id="email" th:value="${#authentication.principal.user.email}" value="이메일" disabled readonly/>
         </div>
-        <form class="d-flex justify-content-end mt-4" th:action="@{/profile/change-password}" method="get">
-            <button type="submit" class="btn btn-outline-secondary">비밀번호 변경하기</button>
-        </form>
+        <div class="d-flex justify-content-end mt-4">
+            <a class="btn btn-outline-secondary" href="/profile/change-password">비밀번호 변경하기</a>
+        </div>
     </div>
 
     <div class="container w-50 mx-auto text-center">
