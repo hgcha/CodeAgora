@@ -135,9 +135,18 @@ public class InfoBoardController {
                          @RequestParam(defaultValue = "1") Integer page,
                          @RequestParam(defaultValue = "10") Integer size,
                          Model model) {
-        model.addAttribute("posts", postService.findAllBySubjectAndKeyword(searchConditionDto, page - 1, size));
         model.addAttribute("requestURI", getRequestURIForSearch(request, searchConditionDto));
-        return "posts";
+
+        String[] parsedResult = searchConditionDto.getSubject().split("_");
+        if (parsedResult[0].equals("post")) {
+            model.addAttribute("posts", postService.findAllBySubjectAndKeyword(searchConditionDto, page - 1, size));
+            return "posts";
+        } else if(parsedResult[0].equals("comment")) {
+            model.addAttribute("comments", commentService.findAllBySubjectAndKeyword(searchConditionDto, page - 1, size));
+            return "comments";
+        } else {
+            throw new IllegalArgumentException("잘못된 검색 쿼리입니다.");
+        }
     }
 
     private String getRequestURIForSearch(HttpServletRequest request, SearchConditionDto searchConditionDto) {

@@ -5,7 +5,6 @@ import hgcha.CodeAgora.domain.post.dto.PostUpdateDto;
 import hgcha.CodeAgora.domain.post.dto.PostVoteDto;
 import hgcha.CodeAgora.domain.post.dto.SearchConditionDto;
 import hgcha.CodeAgora.domain.post.entity.Post;
-import hgcha.CodeAgora.domain.comment.repository.CommentRepository;
 import hgcha.CodeAgora.domain.post.entity.PostVote;
 import hgcha.CodeAgora.domain.post.repository.PostRepository;
 import hgcha.CodeAgora.domain.post.repository.PostVoteRepository;
@@ -72,7 +71,7 @@ public class PostService {
         return postVoteRepository.existsByPostAndUser(post, user);
     }
 
-    public List<Post> getRecentPosts(User user) {
+    public List<Post> getFiveRecentPosts(User user) {
         return postRepository.findTop5ByAuthorOrderByCreatedAtDesc(user);
     }
 

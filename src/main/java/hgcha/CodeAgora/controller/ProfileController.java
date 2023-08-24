@@ -31,8 +31,8 @@ public class ProfileController {
 
     @GetMapping
     public String profile(@AuthenticationPrincipal(expression = "user") User user, Model model) {
-        model.addAttribute("posts", postService.getRecentPosts(user));
-        model.addAttribute("comments", commentService.getRecentComments(user));
+        model.addAttribute("posts", postService.getFiveRecentPosts(user));
+        model.addAttribute("comments", commentService.findFiveRecentComments(user));
         return "profile";
     }
 
@@ -76,4 +76,5 @@ public class ProfileController {
         redirectAttributes.addAttribute("result", "success");
         return "redirect:/profile/change-password";
     }
+
 }

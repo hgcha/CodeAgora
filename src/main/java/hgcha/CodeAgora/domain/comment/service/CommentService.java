@@ -7,10 +7,14 @@ import hgcha.CodeAgora.domain.comment.entity.Comment;
 import hgcha.CodeAgora.domain.comment.entity.CommentVote;
 import hgcha.CodeAgora.domain.comment.repository.CommentRepository;
 import hgcha.CodeAgora.domain.comment.repository.CommentVoteRepository;
+import hgcha.CodeAgora.domain.post.dto.SearchConditionDto;
 import hgcha.CodeAgora.domain.post.repository.PostRepository;
 import hgcha.CodeAgora.domain.user.entity.User;
 import hgcha.CodeAgora.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -64,7 +68,12 @@ public class CommentService {
         );
     }
 
-    public List<Comment> getRecentComments(User user) {
+    public List<Comment> findFiveRecentComments(User user) {
         return commentRepository.findTop5ByAuthorOrderByCreatedAtDesc(user);
     }
+
+    public Page<Comment> findAllBySubjectAndKeyword(SearchConditionDto searchConditionDto, int page, int size) {
+        return commentRepository.findAllBySubjectAndKeyword(searchConditionDto, page, size);
+    }
+
 }

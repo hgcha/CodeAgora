@@ -25,11 +25,11 @@ public class PostQueryDSLRepositoryImpl implements PostQueryDSLRepository {
     public Page<Post> findAllBySubjectAndKeyword(SearchConditionDto searchConditionDto, Integer page, Integer size) {
 
         BooleanExpression whereCondition = null;
-        if (searchConditionDto.getSubject().equals("title")) {
+        if (searchConditionDto.getSubject().equals("post_title")) {
             whereCondition = post.title.contains(searchConditionDto.getKeyword());
-        } else if (searchConditionDto.getSubject().equals("content")) {
+        } else if (searchConditionDto.getSubject().equals("post_content")) {
             whereCondition = post.content.contains(searchConditionDto.getKeyword());
-        } else if (searchConditionDto.getSubject().equals("author")) {
+        } else if (searchConditionDto.getSubject().equals("post_author")) {
             whereCondition = post.author.username.eq(searchConditionDto.getKeyword());
         }
 
