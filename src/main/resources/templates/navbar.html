@@ -13,7 +13,7 @@
             <div class="d-flex flex-row">
                 <a class="nav-link text-white p-4" sec:authorize="isAnonymous()" href="/loginForm">로그인</a>
                 <a class="nav-link text-white p-4" sec:authorize="isAnonymous()" href="/join">회원가입</a>
-                <p class="nav-link text-white p-4 m-0" sec:authorize="isAuthenticated()" th:text="|${#authentication.principal.username}님 안녕하세요!|"></p>
+                <a class="nav-link text-white p-4 m-0" sec:authorize="isAuthenticated()" href="/profile">프로필</a>
                 <form th:action="@{/logout}" sec:authorize="isAuthenticated()" method="post">
                     <button type="submit" class="nav-link text-white p-4">로그아웃</button>
                 </form>

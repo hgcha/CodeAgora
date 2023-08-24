@@ -5,7 +5,6 @@ import hgcha.CodeAgora.domain.post.dto.PostUpdateDto;
 import hgcha.CodeAgora.domain.post.dto.PostVoteDto;
 import hgcha.CodeAgora.domain.post.dto.SearchConditionDto;
 import hgcha.CodeAgora.domain.post.entity.Post;
-import hgcha.CodeAgora.domain.comment.repository.CommentRepository;
 import hgcha.CodeAgora.domain.post.entity.PostVote;
 import hgcha.CodeAgora.domain.post.repository.PostRepository;
 import hgcha.CodeAgora.domain.post.repository.PostVoteRepository;
@@ -16,6 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -68,6 +69,10 @@ public class PostService {
 
     public boolean existsByPostAndUser(Post post, User user) {
         return postVoteRepository.existsByPostAndUser(post, user);
+    }
+
+    public List<Post> getFiveRecentPosts(User user) {
+        return postRepository.findTop5ByAuthorOrderByCreatedAtDesc(user);
     }
 
 }
