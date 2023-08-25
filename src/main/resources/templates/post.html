@@ -20,6 +20,10 @@
                     <span th:text="${post.author.username}">작성자 ID</span>
                     <span style="float: right;" th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm:ss')}">작성 시간</span>
                 </p>
+
+                <!--신고-->
+                <a class="d-block text-end" th:href="|/report?postId=${post.id}|">신고</a>
+
                 <hr/>
                 <p class="card-text mt-4" th:text="${post.content}">
                     게시글 내용
@@ -37,7 +41,9 @@
             </div>
         </div>
 
-        <!--글 수정 버튼-->
+
+
+        <!--글 수정, 삭제 버튼-->
         <div class="mt-2 d-flex flex-row-reverse" sec:authorize="isAuthenticated()" th:if="${post.author.username == #authentication.principal.username}" style="gap: 10px;">
             <form th:action="@{|/info/${post.id}/delete|}" method="post">
                 <button class="btn btn-primary" type="submit">
