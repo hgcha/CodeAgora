@@ -22,7 +22,7 @@
                 </p>
 
                 <!--신고-->
-                <a class="d-block text-end" th:href="|/report?postId=${post.id}|">신고</a>
+                <a sec:authorize="isAuthenticated()" class="d-block text-end" th:href="|/report?postId=${post.id}|">신고</a>
 
                 <hr/>
                 <p class="card-text mt-4" th:text="${post.content}">
