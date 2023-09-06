@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <link rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"/>
+  <title>CodeAgora</title>
+</head>
+<body>
+  <nav th:replace="~{navbar :: navbar}"></nav>
+
+  <div class="w-50 p-3 mx-auto bg-success-subtle rounded-4 mt-4" th:if="${submitted}">
+    신고가 성공적으로 접수되었습니다.
+  </div>
+
+  <form class="w-50 p-3 mx-auto bg-secondary-subtle rounded-4 mt-4" th:object=${reportDto} th:action="@{/report}" method="post">
+
+    <input type="hidden" name="postId" th:value="${post.id}"/>
+
+    <div class="mb-4">
+      <label class="form-label w-100">
+        게시글 제목
+        <p class="form-control" th:text="${post.title}">게시글 제목</p>
+      </label>
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label w-100">
+        게시글 작성자
+        <p class="form-control" th:text="${post.author.username}">게시글 작성자</p>
+      </label>
+    </div>
+
+    <div class="my-1">
+      <label class="form-label w-100">
+        신고 사유
+        <textarea class="form-control" style="resize: none;" name="reason" rows="5"></textarea>
+      </label>
+      <p class="invalid-feedback" th:if="${#fields.hasErrors('reason')}" th:errors="*{reason}">
+        신고 사유를 입력해주세요.
+      </p>
+    </div>
+
+    <div class="d-flex justify-content-end mt-3">
+      <button type="submit" class="btn btn-primary">신고하기</button>
+    </div>
+  </form>
+
+</body>
+</html>

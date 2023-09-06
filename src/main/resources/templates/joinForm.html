@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"/>
+    <title>CodeAgora</title>
+</head>
+<body>
+    <nav th:replace="~{navbar :: navbar}"></nav>
+    <form class="mt-5 w-50 mx-auto bg-secondary-subtle p-4 rounded" th:object="${user}" th:action="@{/join}" method="post">
+
+        <label th:for="username" class="form-label">이름</label>
+        <input type="text" class="form-control" th:field="*{username}" th:errorclass="is-invalid"/>
+        <p class="invalid-feedback" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">
+            이름을 입력해주세요.
+        </p>
+
+        <label th:for="password" class="form-label mt-3">비밀번호</label>
+        <input type="password" class="form-control" th:field="*{password}" th:errorclass="is-invalid"/>
+        <p class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
+            비밀번호를 입력해주세요.
+        </p>
+
+        <label th:for="email" class="form-label mt-3">이메일</label>
+        <input type="text" class="form-control" th:field="*{email}" th:errorclass="is-invalid"/>
+        <p class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
+            이메일을 입력해주세요.
+        </p>
+
+        <div class="d-flex flex-row-reverse">
+            <button type="submit" class="btn btn-primary d-inline mt-3">가입하기</button>
+        </div>
+
+    </form>
+</body>
+</html>

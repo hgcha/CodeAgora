@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"/>
+    <title>CodeAgora</title>
+</head>
+<body>
+    <nav th:replace="~{navbar :: navbar}"></nav>
+
+    <div class="w-75 mx-auto">
+
+        <!--검색 창-->
+        <form class="w-100 mx-auto d-flex justify-content-end mt-5" th:action="@{/info/search}" method="get">
+            <select name="subject" class="form-select border-black text-center" style="width: 12%;">
+                <option value="post_title">글 제목</option>
+                <option value="post_content">글 내용</option>
+                <option value="post_author">글 작성자</option>
+                <option value="comment_content">댓글 내용</option>
+                <option value="comment_author">댓글 작성자</option>
+            </select>
+            <input type="text" class="form-control w-25 border-black" name="keyword"/>
+            <button type="submit" class="btn btn-primary">검색</button>
+        </form>
+
+        <!-- 검색 결과-->
+        <table class="table mt-3 mx-auto w-100 table-bordered text-center">
+            <tr style="height: 10px;">
+                <th class="w-50">내용</th>
+                <th class="w-25">날짜</th>
+            </tr>
+            <tr th:each="comment : ${comments}">
+                <td><a th:href="@{|/info/${comment.post.id}|}" th:text="${comment.content}">댓글 내용</a></td>
+                <td th:text="${#temporals.format(comment.createdAt, 'MM/dd')}">댓글 작성 시간</td>
+            </tr>
+        </table>
+
+        <ul class="pagination justify-content-center mt-3" th:with="groupNumber=${(comments.number - (comments.number % 5)) / 5}, totalPages=${comments.totalPages == 0 ? 1 : comments.totalPages}">
+            <li class="page-item" th:classappend="${comments.isFirst()} ? 'disabled'">
+                <a class="page-link" th:href="@{${requestURI}(page=${comments.number})}">이전</a>
+            </li>
+            <li class="page-item"
+                th:each="num : ${#numbers.sequence(groupNumber * 5 + 1, T(java.lang.Math).min(groupNumber * 5 + 5, totalPages))}"
+                th:classappend="${num} == ${comments.number + 1} ? 'active'">
+                <a class="page-link" th:href="@{${requestURI}(page=${num})}" th:text="${num}">1</a>
+            </li>
+            <li class="page-item" th:classappend="${comments.isLast()} ? 'disabled'">
+                <a class="page-link" th:href="@{${requestURI}(page=${comments.number + 2})}">다음</a>
+            </li>
+        </ul>
+
+    </div>
+
+</body>
+</html>

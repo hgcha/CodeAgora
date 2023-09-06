@@ -1,0 +1,176 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"/>
+    <title>CodeAgora</title>
+</head>
+<body>
+    <nav th:replace="~{navbar :: navbar}"></nav>
+
+    <div class="w-50 mx-auto my-5">
+
+        <!--게시글-->
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-3" th:text="${post.title}">
+                    게시글 제목
+                </h4>
+                <p>
+                    <span th:text="${post.author.username}">작성자 ID</span>
+                    <span style="float: right;" th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm:ss')}">작성 시간</span>
+                </p>
+
+                <!--신고-->
+                <a sec:authorize="isAuthenticated()" class="d-block text-end" th:href="|/report?postId=${post.id}|">신고</a>
+
+                <hr/>
+                <p class="card-text mt-4" th:text="${post.content}">
+                    게시글 내용
+                </p>
+                <form sec:authorize="isAuthenticated()" th:action="@{|${post.id}/like|}" method="post">
+                    <input type="hidden" name="postId" th:value="${post.id}"/>
+                    <input type="hidden" name="username" th:value="${#authentication.principal.username}"/>
+                    <button type="submit" class="btn btn-outline-primary d-block mx-auto" th:classappend="${isLiked} ? 'active'">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-thumbs-up-fill" viewBox="0 0 16 16">
+                            <path d="M6.956 1.745C7.021.81 7.908.087 8.864.325l.261.066c.463.116.874.456 1.012.965.22.816.533 2.511.062 4.51a9.84 9.84 0 0 1 .443-.051c.713-.065 1.669-.072 2.516.21.518.173.994.681 1.2 1.273.184.532.16 1.162-.234 1.733.058.119.103.242.138.363.077.27.113.567.113.856 0 .289-.036.586-.113.856-.039.135-.09.273-.16.404.169.387.107.819-.003 1.148a3.163 3.163 0 0 1-.488.901c.054.152.076.312.076.465 0 .305-.089.625-.253.912C13.1 15.522 12.437 16 11.5 16H8c-.605 0-1.07-.081-1.466-.218a4.82 4.82 0 0 1-.97-.484l-.048-.03c-.504-.307-.999-.609-2.068-.722C2.682 14.464 2 13.846 2 13V9c0-.85.685-1.432 1.357-1.615.849-.232 1.574-.787 2.132-1.41.56-.627.914-1.28 1.039-1.639.199-.575.356-1.539.428-2.59z"/>
+                        </svg>
+                        <span th:text="${post.likes.size()}">1</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+
+
+        <!--글 수정, 삭제 버튼-->
+        <div class="mt-2 d-flex flex-row-reverse" sec:authorize="isAuthenticated()" th:if="${post.author.username == #authentication.principal.username}" style="gap: 10px;">
+            <form th:action="@{|/info/${post.id}/delete|}" method="post">
+                <button class="btn btn-primary" type="submit">
+                    삭제
+                </button>
+            </form>
+
+            <button class="btn btn-primary" type="button" th:onclick="|location.href='/info/${post.id}/update'|">
+                수정
+            </button>
+        </div>
+
+        <div class="mb-5"></div>
+
+        <!--댓글-->
+        <div class="card mb-2 w-100" th:each="comment : ${post.comments}">
+            <div class="card-body">
+                <p class="m-0">
+                    <span class="card-text" th:text="${comment.author.username}">댓글 작성자 이름</span>
+                    <span class="card-text" style="float: right;" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm:ss')}">댓글 작성 시간</span>
+                </p>
+
+                <!--수정, 삭제 버튼-->
+                <div class="d-flex flex-row-reverse" sec:authorize="isAuthenticated()" th:if="${comment.author.username == #authentication.principal.username}" style="gap: 5px;">
+                    <form th:action="@{|/info/${post.id}/comments/${comment.id}/delete|}" method="post">
+                        <button class="btn btn-primary btn-sm mt-2" type="submit">
+                            삭제
+                        </button>
+                    </form>
+
+                    <button class="btn btn-primary btn-sm mt-2" type="button" th:onclick="|showCommentUpdate(${comment.id})|">
+                        수정
+                    </button>
+                </div>
+
+                <!--댓글 추천, 비추천 기능-->
+                <div class="d-flex justify-content-end my-1" sec:authorize="isAuthenticated()" th:if="${comment.author.username != #authentication.principal.username}">
+                    <form th:action="@{|${post.id}/comments/${comment.id}/vote|}" method="post">
+                        <input type="hidden" name="commentId" th:value="${comment.id}"/>
+                        <input type="hidden" name="username" th:value="${#authentication.principal.username}"/>
+                        <input type="hidden" name="isLike" value="true"/>
+                        <button type="submit" class="btn btn-outline-primary btn-sm mx-1"
+                                th:classappend="${comment.isLikedByUser(#authentication.principal.user)} ? 'active'">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-thumbs-up-fill" viewBox="0 0 16 16">
+                                <path d="M6.956 1.745C7.021.81 7.908.087 8.864.325l.261.066c.463.116.874.456 1.012.965.22.816.533 2.511.062 4.51a9.84 9.84 0 0 1 .443-.051c.713-.065 1.669-.072 2.516.21.518.173.994.681 1.2 1.273.184.532.16 1.162-.234 1.733.058.119.103.242.138.363.077.27.113.567.113.856 0 .289-.036.586-.113.856-.039.135-.09.273-.16.404.169.387.107.819-.003 1.148a3.163 3.163 0 0 1-.488.901c.054.152.076.312.076.465 0 .305-.089.625-.253.912C13.1 15.522 12.437 16 11.5 16H8c-.605 0-1.07-.081-1.466-.218a4.82 4.82 0 0 1-.97-.484l-.048-.03c-.504-.307-.999-.609-2.068-.722C2.682 14.464 2 13.846 2 13V9c0-.85.685-1.432 1.357-1.615.849-.232 1.574-.787 2.132-1.41.56-.627.914-1.28 1.039-1.639.199-.575.356-1.539.428-2.59z"/>
+                            </svg>
+                            <span th:text="${comment.likes.size()}">2</span>
+                        </button>
+                    </form>
+                    <form th:action="@{|${post.id}/comments/${comment.id}/vote|}" method="post">
+                        <input type="hidden" name="commentId" th:value="${comment.id}"/>
+                        <input type="hidden" name="username" th:value="${#authentication.principal.username}"/>
+                        <input type="hidden" name="isLike" value="false"/>
+                        <button type="submit" class="btn btn-outline-danger btn-sm"
+                                th:classappend="${comment.isDislikedByUser(#authentication.principal.user)} ? 'active'">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-thumbs-down-fill" viewBox="0 0 16 16">
+                                <path d="M6.956 14.534c.065.936.952 1.659 1.908 1.42l.261-.065a1.378 1.378 0 0 0 1.012-.965c.22-.816.533-2.512.062-4.51.136.02.285.037.443.051.713.065 1.669.071 2.516-.211.518-.173.994-.68 1.2-1.272a1.896 1.896 0 0 0-.234-1.734c.058-.118.103-.242.138-.362.077-.27.113-.568.113-.856 0-.29-.036-.586-.113-.857a2.094 2.094 0 0 0-.16-.403c.169-.387.107-.82-.003-1.149a3.162 3.162 0 0 0-.488-.9c.054-.153.076-.313.076-.465a1.86 1.86 0 0 0-.253-.912C13.1.757 12.437.28 11.5.28H8c-.605 0-1.07.08-1.466.217a4.823 4.823 0 0 0-.97.485l-.048.029c-.504.308-.999.61-2.068.723C2.682 1.815 2 2.434 2 3.279v4c0 .851.685 1.433 1.357 1.616.849.232 1.574.787 2.132 1.41.56.626.914 1.28 1.039 1.638.199.575.356 1.54.428 2.591z"/>
+                            </svg>
+                            <span th:text="${comment.dislikes.size()}">1</span>
+                        </button>
+                    </form>
+                </div>
+
+                <hr/>
+
+                <!-- 댓글 내용 -->
+                <p th:id="|commentContent${comment.id}|"
+                   th:style="${commentUpdateDto != null} ? (${commentUpdateDto.id} == ${comment.id} and ${#fields.hasErrors('${commentUpdateDto.content}')} ? 'display: none;')"
+                   class="card-text mt-4" th:text="${comment.content}">댓글 내용</p>
+
+                <!-- 댓글 수정 창 -->
+                <form th:id="|commentUpdate${comment.id}|"
+                      th:style="${commentUpdateDto == null} ? 'display: none;' : (${commentUpdateDto.id} == ${comment.id} and ${#fields.hasErrors('${commentUpdateDto.content}')} ? 'display: block;' : 'display: none;')"
+                      th:action="@{|/info/${post.id}/comments/${comment.id}/update|}"
+                      method="post">
+                    <input type="hidden" name="id" th:value="${comment.id}"/>
+                    <textarea class="w-100 form-control"
+                              style="resize: none;"
+                              rows="3"
+                              name="content"
+                              th:text="${commentUpdateDto?.content} ?: ${comment.content}"
+                              th:classappend="${commentUpdateDto != null} ? (${commentUpdateDto.id} == ${comment.id} and ${#fields.hasErrors('${commentUpdateDto.content}')} ? 'is-invalid')" >
+                    </textarea>
+                    <p class="invalid-feedback">
+                        빈 댓글은 입력할 수 없습니다.
+                    </p>
+                    <button type="submit" class="btn btn-primary btn-sm mt-2">
+                        수정
+                    </button>
+                    <button type="button" class="btn btn-primary btn-sm mt-2" th:onclick="|hideCommentUpdate(${comment.id})|">
+                        취소
+                    </button>
+                </form>
+
+            </div>
+        </div>
+
+        <!--댓글 입력-->
+        <form class="mt-5 w-100" th:object="${comment}" th:action="@{|/info/${post.id}/comments/create|}" method="post">
+            <input type="hidden" name="postId" th:value="${post.id}"/>
+            <input type="hidden" name="username" sec:authorize="isAuthenticated()" th:value="${#authentication.principal.username}"/>
+            <textarea class="w-100 form-control" th:errorclass="is-invalid" th:field="*{content}" style="resize: none;" rows="3"
+                      sec:authorize="isAuthenticated()" placeholder="댓글을 입력해주세요."></textarea>
+            <textarea class="w-100 form-control" disabled th:errorclass="is-invalid" th:field="*{content}" style="resize: none;" rows="3"
+                      sec:authorize="isAnonymous()" placeholder="로그인 후 댓글을 작성하실 수 있습니다."></textarea>
+            <p class="invalid-feedback" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">
+                빈 댓글은 작성할 수 없습니다.
+            </p>
+            <div class="d-flex flex-row-reverse mt-2">
+                <button class="btn btn-primary" sec:authorize="isAuthenticated()" type="submit">
+                    댓글 작성
+                </button>
+            </div>
+        </form>
+
+    </div>
+
+    <script>
+        function showCommentUpdate(id) {
+            document.getElementById('commentContent' + id).style.display = 'none';
+            document.getElementById('commentUpdate' + id).style.display = 'block';
+        }
+
+        function hideCommentUpdate(id) {
+            document.getElementById('commentContent' + id).style.display = 'block';
+            document.getElementById('commentUpdate' + id).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
