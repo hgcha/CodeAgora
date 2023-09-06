@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"/>
+    <title>CodeAgora</title>
+</head>
+<body>
+    <nav th:replace="~{navbar :: navbar}"></nav>
+
+    <div class="w-50 p-3 mx-auto bg-secondary-subtle rounded-4 mt-4">
+        <div class="mb-4">
+            <h5>게시글</h5>
+            <a class="form-control" th:href="@{|/info/${report.post.id}|}" th:text="${report.post.title}">게시글</a>
+        </div>
+
+        <div class="mb-4">
+            <h5>게시글 작성자</h5>
+            <p class="form-control" th:text="${report.post.author.username}">게시글 작성자</p>
+        </div>
+
+        <div class="mb-4">
+            <h5>신고자</h5>
+            <p class="form-control" th:text="${report.reporter.username}">신고자</p>
+        </div>
+
+        <div class="my-1">
+            <h5>신고 사유</h5>
+            <textarea class="form-control" style="resize: none;" name="reason" rows="5" th:text="${report.reason}" readonly></textarea>
+        </div>
+    </div>
+
+    <form class="w-50 p-3 mx-auto bg-secondary-subtle rounded-4 mt-4" th:action="@{|/admin/report/${report.id}|}" method="post">
+        <input type="hidden" name="bannedId" th:value="${report.post.author.id}">
+        <h5>정지 기간</h5>
+        <select class="form-select" name="period">
+            <option value="0">기각</option>
+            <option value="7">7일 정지</option>
+            <option value="30">30일 정지</option>
+            <option value="100000">영구정지</option>
+        </select>
+        <div class="mt-2 d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary">결정</button>
+        </div>
+    </form>
+
+</body>
+</html>

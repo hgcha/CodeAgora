@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"/>
+    <title>CodeAgora</title>
+</head>
+<body>
+    <nav th:replace="~{navbar :: navbar}"></nav>
+
+        <div class="mt-5 w-50 mx-auto p-3 bg-light rounded-4 shadow">
+            <a style="text-decoration: none; color: black;" href="/admin/reportList"><h5>신고 목록 보기</h5></a>
+        </div>
+
+</body>
+</html>

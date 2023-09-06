@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -28,6 +30,16 @@ public class UserService {
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow();
+    }
+
+    public User findById(Long id) {
+        return userRepository.findById(id).orElseThrow();
+    }
+
+    public void banUser(Long id, int period) {
+        User user = userRepository.findById(id).orElseThrow();
+        user.setBannedUntil(LocalDateTime.now().plusDays(period));
+        userRepository.save(user);
     }
 
     public void changePassword(User user, String newPassword) {

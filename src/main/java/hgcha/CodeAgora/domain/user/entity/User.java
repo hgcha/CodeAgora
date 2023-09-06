@@ -31,6 +31,9 @@ public class User {
     @Column(name = "joined_at")
     private LocalDateTime joinedAt;
 
+    @Column(name = "banned_until")
+    private LocalDateTime bannedUntil;
+
     @Builder
     public User(String username, String password, String email, Role role) {
         this.username = username;
@@ -57,5 +60,9 @@ public class User {
 
     public void setPassword(String newEncodedPassword) {
         this.password = newEncodedPassword;
+    }
+
+    public void setBannedUntil(LocalDateTime bannedUntil) {
+        this.bannedUntil = bannedUntil;
     }
 }
