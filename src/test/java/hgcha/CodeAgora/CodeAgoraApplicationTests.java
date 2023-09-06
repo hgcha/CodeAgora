@@ -1,12 +1,16 @@
 package hgcha.CodeAgora;
 
 import hgcha.CodeAgora.domain.post.entity.Post;
+import hgcha.CodeAgora.domain.user.dto.UserCreateDto;
 import hgcha.CodeAgora.domain.user.entity.User;
 import hgcha.CodeAgora.domain.post.repository.PostRepository;
 import hgcha.CodeAgora.domain.user.repository.UserRepository;
+import hgcha.CodeAgora.domain.user.role.Role;
+import hgcha.CodeAgora.domain.user.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootTest
 class CodeAgoraApplicationTests {
@@ -16,6 +20,12 @@ class CodeAgoraApplicationTests {
 
 	@Autowired
 	UserRepository userRepository;
+
+	@Autowired
+	UserService userService;
+
+	@Autowired
+	BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Test
 	void contextLoads() {
@@ -32,6 +42,16 @@ class CodeAgoraApplicationTests {
 							   .build();
 			postRepository.save(newPost);
 		}
+	}
+
+	@Test
+	void createAdmin() {
+		userRepository.save(User.builder()
+				.username("admin")
+				.password(bCryptPasswordEncoder.encode("admin"))
+				.email("ghkdthcha@naver.com")
+				.role(Role.ROLE_ADMIN)
+				.build());
 	}
 
 }

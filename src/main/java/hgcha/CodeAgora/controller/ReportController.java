@@ -1,6 +1,5 @@
 package hgcha.CodeAgora.controller;
 
-import hgcha.CodeAgora.auth.PrincipalDetails;
 import hgcha.CodeAgora.domain.post.service.PostService;
 import hgcha.CodeAgora.domain.report.dto.ReportDto;
 import hgcha.CodeAgora.domain.report.service.ReportService;
