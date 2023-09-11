@@ -13,8 +13,6 @@ import hgcha.CodeAgora.domain.user.entity.User;
 import hgcha.CodeAgora.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

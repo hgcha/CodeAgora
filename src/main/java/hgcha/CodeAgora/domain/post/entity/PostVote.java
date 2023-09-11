@@ -1,11 +1,13 @@
 package hgcha.CodeAgora.domain.post.entity;
 
-import hgcha.CodeAgora.domain.post.entity.Post;
 import hgcha.CodeAgora.domain.user.entity.User;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@Table(name = "post_vote")
 @NoArgsConstructor
 public class PostVote {
 

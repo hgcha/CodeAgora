@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "comment_vote")
 @Getter
 @NoArgsConstructor
 public class CommentVote {
