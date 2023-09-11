@@ -2,7 +2,6 @@ package hgcha.CodeAgora.domain.post.service;
 
 import hgcha.CodeAgora.domain.post.dto.PostCreateDto;
 import hgcha.CodeAgora.domain.post.dto.PostUpdateDto;
-import hgcha.CodeAgora.domain.post.dto.PostVoteDto;
 import hgcha.CodeAgora.domain.post.dto.SearchConditionDto;
 import hgcha.CodeAgora.domain.post.entity.Post;
 import hgcha.CodeAgora.domain.post.entity.PostVote;
@@ -61,18 +60,12 @@ public class PostService {
         return postRepository.findAllBySubjectAndKeyword(searchConditionDto, page, size);
     }
 
-    public void likeOrDislikePost(PostVoteDto postVoteDto) {
-        Post post = postRepository.findById(postVoteDto.getPostId()).orElseThrow();
-        User user = userRepository.findByUsername(postVoteDto.getUsername()).orElseThrow();
-
-        postVoteRepository.findByPostAndUser(post, user).ifPresentOrElse(
-                like -> postVoteRepository.delete(like),
-                () -> postVoteRepository.save(new PostVote(post, user))
-        );
+    public void vote(Long postId, User user) {
+        postVoteRepository.save(new PostVote(postRepository.getReferenceById(postId), user));
     }
 
-    public boolean existsByPostAndUser(Post post, User user) {
-        return postVoteRepository.existsByPostAndUser(post, user);
+    public void cancelVote(Long postId, User user) {
+        postVoteRepository.deleteByPostIdAndUserId(postId, user.getId());
     }
 
     public List<Post> getFiveRecentPosts(User user) {

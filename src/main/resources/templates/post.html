@@ -28,7 +28,7 @@
                 <p class="card-text mt-4" th:text="${post.content}">
                     게시글 내용
                 </p>
-                <form sec:authorize="isAuthenticated()" th:action="@{|${post.id}/like|}" method="post">
+                <form sec:authorize="isAuthenticated()" th:action="@{|${post.id}/${isLiked ? 'cancelVote' : 'vote'}|}" method="post">
                     <input type="hidden" name="postId" th:value="${post.id}"/>
                     <input type="hidden" name="username" th:value="${#authentication.principal.username}"/>
                     <button type="submit" class="btn btn-outline-primary d-block mx-auto" th:classappend="${isLiked} ? 'active'">

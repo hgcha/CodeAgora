@@ -16,6 +16,7 @@ import java.util.Optional;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long>, PostQueryDSLRepository {
     Page<Post> findAll(Pageable pageable);
+
     List<Post> findTop5ByAuthorOrderByCreatedAtDesc(User author);
 
     @Query("""

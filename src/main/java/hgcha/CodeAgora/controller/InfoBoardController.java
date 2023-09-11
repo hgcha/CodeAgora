@@ -6,12 +6,12 @@ import hgcha.CodeAgora.domain.comment.dto.CommentUpdateDto;
 import hgcha.CodeAgora.domain.comment.dto.CommentVoteDto;
 import hgcha.CodeAgora.domain.comment.entity.Comment;
 import hgcha.CodeAgora.domain.comment.service.CommentService;
-import hgcha.CodeAgora.domain.post.dto.PostVoteDto;
 import hgcha.CodeAgora.domain.post.dto.PostCreateDto;
 import hgcha.CodeAgora.domain.post.dto.PostUpdateDto;
 import hgcha.CodeAgora.domain.post.dto.SearchConditionDto;
 import hgcha.CodeAgora.domain.post.entity.Post;
 import hgcha.CodeAgora.domain.post.service.PostService;
+import hgcha.CodeAgora.domain.user.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -156,9 +156,15 @@ public class InfoBoardController {
                 + "&keyword=" + searchConditionDto.getKeyword();
     }
 
-    @PostMapping("/{postId}/like")
-    public String likePost(@PathVariable Long postId, PostVoteDto postVoteDto) {
-        postService.likeOrDislikePost(postVoteDto);
+    @PostMapping("/{postId}/vote")
+    public String votePost(@PathVariable Long postId, @AuthenticationPrincipal(expression = "user") User user) {
+        postService.vote(postId, user);
+        return "redirect:/info/{postId}";
+    }
+
+    @PostMapping("/{postId}/cancelVote")
+    public String cancelPost(@PathVariable Long postId, @AuthenticationPrincipal(expression = "user") User user) {
+        postService.cancelVote(postId, user);
         return "redirect:/info/{postId}";
     }
 
