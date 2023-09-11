@@ -12,6 +12,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -33,7 +34,7 @@ public class Post {
     private List<Comment> comments;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-    private List<PostVote> likes;
+    private Set<PostVote> likes;
 
     @CreationTimestamp
     @Column(name = "created_at")

@@ -30,6 +30,10 @@ public class PostService {
         return postRepository.findById(id).orElseThrow();
     }
 
+    public Post findPostDetails(Long id) {
+        return postRepository.findPostDetails(id).orElseThrow();
+    }
+
     public Page<Post> findPosts(int page, int size) {
         return postRepository.findAll(PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt")));
     }

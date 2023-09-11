@@ -12,6 +12,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -31,7 +32,7 @@ public class Comment {
     private String content;
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
-    List<CommentVote> commentVotes;
+    Set<CommentVote> commentVotes;
 
     @CreationTimestamp
     @Column(name = "created_at")

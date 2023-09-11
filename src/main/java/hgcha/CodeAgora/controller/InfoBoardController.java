@@ -46,11 +46,12 @@ public class InfoBoardController {
 
     @GetMapping("/{postId}")
     public String post(@PathVariable Long postId, @AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
-        Post post = postService.findById(postId);
+        Post post = postService.findPostDetails(postId);
         model.addAttribute("post", post);
         model.addAttribute("comment", new Comment());
         if (principalDetails != null) {
-            model.addAttribute("isLiked", postService.existsByPostAndUser(post, principalDetails.getUser()));
+            model.addAttribute("isLiked", post.getLikes().stream()
+                                              .anyMatch(like -> like.getUser().getId() == principalDetails.getUser().getId()));
         }
         return "post";
     }
