@@ -15,6 +15,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@Table(indexes = {@Index(name = "idx_post_author", columnList = "author_id")})
 @Getter
 @NoArgsConstructor
 public class Post {

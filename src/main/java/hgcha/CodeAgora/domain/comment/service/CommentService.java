@@ -48,7 +48,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(id).orElseThrow();
         commentRepository.delete(comment);
     }
-    
+
     public List<Comment> findFiveRecentComments(User user) {
         return commentRepository.findTop5ByAuthorOrderByCreatedAtDesc(user);
     }
