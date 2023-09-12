@@ -12,7 +12,7 @@ import java.util.Objects;
 
 @Entity
 @Getter
-@Table(name = "member")
+@Table(name = "member", indexes = {@Index(name = "idx_user_username", columnList = "username")})
 @NoArgsConstructor
 public class User {
 

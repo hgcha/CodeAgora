@@ -34,11 +34,11 @@ class CodeAgoraApplicationTests {
 	@Test
 	void testPostData() {
 		User userA = userRepository.findByUsername("userA").get();
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 100000; i++) {
 			Post newPost = Post.builder()
 							   .author(userA)
-							   .title("테스트 제목입니다. " + i)
-							   .content("테스트 내용입니다. " + i)
+							   .title("테스트 제목입니다[" + i + "]")
+							   .content("테스트 내용입니다[" + i + "]")
 							   .build();
 			postRepository.save(newPost);
 		}
