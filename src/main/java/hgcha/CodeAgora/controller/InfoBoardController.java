@@ -168,9 +168,15 @@ public class InfoBoardController {
         return "redirect:/info/{postId}";
     }
 
-    @PostMapping("/{postId}/comments/{commentId}/vote")
-    public String voteComment(@PathVariable Long postId, CommentVoteDto commentVoteDto) {
-        commentService.voteComment(commentVoteDto);
+    @PostMapping("/{postId}/comments/{commentId}/upvote")
+    public String upvoteComment(CommentVoteDto commentVoteDto, @AuthenticationPrincipal(expression = "user") User user) {
+        commentService.upvoteComment(commentVoteDto, user);
+        return "redirect:/info/{postId}";
+    }
+
+    @PostMapping("/{postId}/comments/{commentId}/downvote")
+    public String downvoteComment(CommentVoteDto commentVoteDto, @AuthenticationPrincipal(expression = "user") User user) {
+        commentService.downvoteComment(commentVoteDto, user);
         return "redirect:/info/{postId}";
     }
 

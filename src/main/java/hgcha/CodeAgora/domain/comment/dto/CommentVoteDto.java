@@ -9,7 +9,7 @@ public class CommentVoteDto {
 
     private Long commentId;
 
-    private String username;
+    private Boolean isUpvoted;
 
-    private boolean isLike;
+    private Boolean isDownvoted;
 }

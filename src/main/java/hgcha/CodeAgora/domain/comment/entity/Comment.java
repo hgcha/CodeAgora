@@ -74,21 +74,21 @@ public class Comment {
         this.content = content;
     }
 
-    public List<CommentVote> getLikes() {
+    public List<CommentVote> getUpvotes() {
         return commentVotes.stream().filter(commentVote -> commentVote.isLike()).toList();
     }
 
-    public List<CommentVote> getDislikes() {
+    public List<CommentVote> getDownvotes() {
         return commentVotes.stream().filter(commentVote -> !commentVote.isLike()).toList();
     }
 
-    public boolean isLikedByUser(User user) {
+    public boolean isUpvotedByUser(User user) {
         return commentVotes.stream()
-                    .filter(commentVote -> commentVote.isLike())
-                    .anyMatch(commentVote -> commentVote.getUser().equals(user));
+                           .filter(commentVote -> commentVote.isLike())
+                           .anyMatch(commentVote -> commentVote.getUser().equals(user));
     }
 
-    public boolean isDislikedByUser(User user) {
+    public boolean isDownvotedByUser(User user) {
         return commentVotes.stream()
                            .filter(commentVote -> !commentVote.isLike())
                            .anyMatch(commentVote -> commentVote.getUser().equals(user));

@@ -48,24 +48,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(id).orElseThrow();
         commentRepository.delete(comment);
     }
-
-    public void voteComment(CommentVoteDto commentVoteDto) {
-        Comment comment = commentRepository.findById(commentVoteDto.getCommentId()).orElseThrow();
-        User user = userRepository.findByUsername(commentVoteDto.getUsername()).orElseThrow();
-
-        commentVoteRepository.findByCommentAndUser(comment, user).ifPresentOrElse(
-                commentVote -> {
-                    if (commentVote.isLike() == commentVoteDto.isLike()) {
-                        commentVoteRepository.delete(commentVote);
-                    } else {
-                        commentVote.setLike(!commentVote.isLike());
-                        commentVoteRepository.save(commentVote);
-                    }
-                },
-                () -> commentVoteRepository.save(new CommentVote(comment, user, commentVoteDto.isLike()))
-        );
-    }
-
+    
     public List<Comment> findFiveRecentComments(User user) {
         return commentRepository.findTop5ByAuthorOrderByCreatedAtDesc(user);
     }
@@ -74,4 +57,23 @@ public class CommentService {
         return commentRepository.findAllBySubjectAndKeyword(searchConditionDto, page, size);
     }
 
+    public void upvoteComment(CommentVoteDto commentVoteDto, User user) {
+        if (commentVoteDto.getIsUpvoted()) {
+            commentVoteRepository.deleteByCommentIdAndUserId(commentVoteDto.getCommentId(), user.getId());
+        } else if (commentVoteDto.getIsDownvoted()) {
+            commentVoteRepository.upvoteByCommentIdAndUserId(commentVoteDto.getCommentId(), user.getId());
+        } else {
+            commentVoteRepository.save(new CommentVote(commentRepository.getReferenceById(commentVoteDto.getCommentId()), user, true));
+        }
+    }
+
+    public void downvoteComment(CommentVoteDto commentVoteDto, User user) {
+        if (commentVoteDto.getIsUpvoted()) {
+            commentVoteRepository.downvoteByCommentIdAndUserId(commentVoteDto.getCommentId(), user.getId());
+        } else if (commentVoteDto.getIsDownvoted()) {
+            commentVoteRepository.deleteByCommentIdAndUserId(commentVoteDto.getCommentId(), user.getId());
+        } else {
+            commentVoteRepository.save(new CommentVote(commentRepository.getReferenceById(commentVoteDto.getCommentId()), user, false));
+        }
+    }
 }
